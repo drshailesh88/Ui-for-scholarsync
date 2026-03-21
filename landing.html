@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarSync — Built for deep work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,580;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: "DM Sans", sans-serif; color: #241013; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: #fff; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+ul { list-style: none; }
+.site-nav { position: sticky; top: 0; z-index: 201; width: 100%; padding: 0 24px; }
+.site-nav nav {
+  max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 24px; border-radius: 9999px; margin-top: 16px;
+  border: 1px solid rgba(0,0,0,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.85);
+}
+.nav-link { font-size: 14px; font-weight: 500; color: rgba(36,16,19,0.65); display: flex; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; }
+.nav-link:hover { color: rgb(36,16,19); }
+.btn-get-started {
+  display: inline-flex; align-items: center; gap: 8px; background: #1E1145; color: #fff;
+  font-size: 14px; font-weight: 500; padding: 8px 8px 8px 20px; border-radius: 9999px;
+}
+.btn-get-started span {
+  background: #C4B5FD; display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+}
+.hero-section {
+  background: #fff; padding: 16px 36px 0; max-width: 1440px; margin: 0 auto;
+}
+.hero-title-group {
+  display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 56px;
+}
+.hero-title-group h1 {
+  font-size: 64px; font-weight: 500; line-height: 0.96; color: #241013;
+  text-align: center; max-width: 900px;
+}
+.hero-title-group h2 {
+  font-size: 22px; font-weight: 400; line-height: 1.4;
+  color: rgba(36,16,19,0.6); text-align: center; max-width: 700px;
+}
+.hero-gradient-band {
+  position: relative; max-width: 1440px; margin: 0 auto; padding: 0 36px 0;
+}
+.hero-gradient-band::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 40px; height: 360px;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(109,40,217,0.7) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 50%, rgba(107,165,232,0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 60%, rgba(176,112,192,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 40%, rgba(80,50,140,0.8) 0%, transparent 40%);
+  border-radius: 24px; z-index: 0;
+}
+.hero-mockup {
+  max-width: 1100px; margin: 32px auto 0; background: #fff;
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 8px 60px rgba(109,40,217,0.15), 0 2px 8px rgba(0,0,0,0.06);
+  position: relative; z-index: 1;
+}
+.mockup-toolbar {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-bottom: 1px solid rgba(36,16,19,0.08); background: #FAFAF8;
+}
+.mockup-dots { display: flex; gap: 5px; }
+.mockup-dots span { width: 9px; height: 9px; border-radius: 50%; }
+.mockup-dots span:nth-child(1) { background: #fca5a5; }
+.mockup-dots span:nth-child(2) { background: #fde68a; }
+.mockup-dots span:nth-child(3) { background: #86efac; }
+.mockup-filename { flex: 1; text-align: center; font-family: monospace; font-size: 11px; color: rgba(36,16,19,0.4); }
+.mockup-body { display: grid; grid-template-columns: 220px 1fr 240px; min-height: 340px; }
+.mockup-sidebar { padding: 18px; border-right: 1px solid rgba(36,16,19,0.08); }
+.mockup-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(36,16,19,0.4); font-weight: 600; margin-bottom: 12px; }
+.mockup-source { background: #F5F4F0; border: 1px solid rgba(36,16,19,0.06); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+.mockup-source-title { font-size: 10.5px; font-weight: 500; color: #241013; line-height: 1.4; margin-bottom: 3px; }
+.mockup-source-meta { font-size: 9.5px; color: rgba(36,16,19,0.45); }
+.badge { display: inline-block; font-size: 8.5px; padding: 2px 6px; border-radius: 4px; margin-top: 5px; font-weight: 600; }
+.badge-green { background: rgba(10,104,71,0.1); color: #0a6847; }
+.badge-blue { background: rgba(74,122,181,0.1); color: #4a7ab5; }
+.badge-amber { background: rgba(212,176,96,0.15); color: #8a6d1b; }
+.mockup-editor { padding: 24px 28px; }
+.mockup-editor-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgb(109,40,217); font-weight: 600; margin-bottom: 16px; }
+.mockup-editor p { font-size: 13px; line-height: 1.75; color: rgba(36,16,19,0.65); margin-bottom: 12px; }
+.mockup-editor .cite { color: rgb(109,40,217); }
+.mockup-cursor { width: 2px; height: 18px; background: rgb(109,40,217); border-radius: 2px; animation: blink 1.2s step-end infinite; margin-top: 10px; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+.mockup-ai { padding: 18px; border-left: 1px solid rgba(36,16,19,0.08); }
+.mockup-ai-header { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.mockup-ai-icon { width: 20px; height: 20px; border-radius: 5px; background: rgba(109,40,217,0.12); display: flex; align-items: center; justify-content: center; }
+.mockup-ai-label { font-size: 10.5px; font-weight: 600; color: rgb(109,40,217); }
+.mockup-ai-card { background: #F5F4F0; border: 1px solid rgba(36,16,19,0.06); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+.mockup-ai-card-label { font-size: 9.5px; color: rgb(109,40,217); font-weight: 600; margin-bottom: 5px; }
+.mockup-ai-card p { font-size: 10.5px; color: rgba(36,16,19,0.6); line-height: 1.5; }
+.mockup-ai-badge { display: inline-block; font-size: 8.5px; padding: 4px 8px; border-radius: 5px; background: rgba(109,40,217,0.08); color: rgb(109,40,217); font-weight: 500; margin-top: 8px; }
+.hero-bottom-spacer { height: 80px; background: linear-gradient(to bottom, #fff 0%, rgb(242,240,235) 100%); }
+.main-content { background: rgb(242,240,235); position: relative; z-index: 1; }
+.stats-section { padding: 80px 36px 64px; max-width: 1100px; margin: 0 auto; }
+.stats-headline { font-size: 40px; font-weight: 500; line-height: 1.15; letter-spacing: -0.5px; color: rgb(36,16,19); text-align: center; margin-bottom: 48px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat-card {
+  background: rgb(233,229,221); border-radius: 16px; padding: 32px 24px; text-align: left;
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.stat-card.visible { opacity: 1; transform: translateY(0); }
+.stat-card:nth-child(1) { transition-delay: 0s; }
+.stat-card:nth-child(2) { transition-delay: 0.12s; }
+.stat-card:nth-child(3) { transition-delay: 0.24s; }
+.stat-card:nth-child(4) { transition-delay: 0.36s; }
+.stat-card::before { content:''; position:absolute; left:0; top:16px; bottom:16px; width:4px; border-radius:0 4px 4px 0; transform:scaleY(0); transition:transform 0.5s ease 0.4s; }
+.stat-card.visible::before { transform: scaleY(1); }
+.stat-card:nth-child(1)::before { background: #0a6847; }
+.stat-card:nth-child(2)::before { background: #4a7ab5; }
+.stat-card:nth-child(3)::before { background: #d4b060; }
+.stat-card:nth-child(4)::before { background: #c06090; }
+.stat-number { font-size: 52px; font-weight: 700; color: rgb(36,16,19); line-height: 1; letter-spacing: -1.5px; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+.stat-unit { font-size: 15px; font-weight: 500; color: rgba(36,16,19,0.5); margin-bottom: 16px; min-height: 20px; }
+.stat-desc { font-size: 14px; color: rgba(36,16,19,0.55); line-height: 1.5; }
+.suite-section { background: rgb(242,240,235); padding: 0 36px; max-width: 1440px; margin: 0 auto; }
+.suite-sticky-header { position: sticky; top: 72px; z-index: 190; background: rgb(242,240,235); padding-bottom: 24px; }
+.suite-top-row { display: flex; gap: 32px; justify-content: space-between; align-items: center; padding: 36px 0; height: 124px; }
+.suite-top-row h2 { font-size: 48px; font-weight: 400; color: rgb(36,16,19); }
+.suite-get-btn {
+  color: rgb(109,40,217); font-size: 16px; font-weight: 580; padding: 6px 24px; border-radius: 8px;
+  height: 52px; border: 1px solid rgb(109,40,217); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s;
+}
+.suite-get-btn:hover { background: rgba(109,40,217,0.06); }
+.suite-tabs {
+  display: grid; grid-template-columns: repeat(7, 1fr); height: 70px; border-radius: 12px;
+  overflow: hidden; border: 1px solid rgba(36,16,19,0.12);
+}
+.suite-tab {
+  font-size: 16px; font-weight: 400; padding: 12px 16px; color: rgba(36,16,19,0.76); background: transparent;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
+  justify-content: center; gap: 10px; border-right: 1px solid rgba(36,16,19,0.12); border-radius: 0;
+}
+.suite-tab:last-child { border-right: none; }
+.suite-tab.active { background: rgb(233,229,221); color: rgb(36,16,19); }
+.suite-tab:hover:not(.active) { background: rgba(36,16,19,0.04); }
+.suite-tab .tab-icon { width: 24px; height: 24px; flex-shrink: 0; }
+.suite-tab .tab-img-wrap {
+  width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.suite-tab .tab-img-wrap img { width: 14px; height: 14px; object-fit: contain; filter: brightness(0) invert(1); }
+.product-blocks { display: flex; flex-direction: column; gap: 36px; padding: 36px 0 96px; }
+.product-block { display: flex; gap: 48px; align-items: stretch; min-height: 500px; scroll-margin-top: 280px; }
+.product-block.reversed { flex-direction: row-reverse; }
+.product-text { flex: 1 1 50%; display: flex; flex-direction: column; gap: 16px; justify-content: center; padding: 36px 0; }
+.product-text .product-label { font-size: 20px; font-weight: 400; color: rgb(36,16,19); }
+.product-text .product-title { font-size: 48px; font-weight: 400; line-height: 48px; color: rgb(36,16,19); }
+.product-text .product-desc { font-size: 16px; color: rgba(36,16,19,0.76); line-height: 25.6px; max-width: 480px; }
+.product-text .learn-more-link {
+  color: rgb(109,40,217); font-size: 16px; font-weight: 580; display: inline-flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(109,40,217,0.5); padding-bottom: 2px; width: fit-content;
+}
+.product-text .learn-more-link svg { width: 16px; height: 16px; }
+.product-features { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.product-features li { display: flex; gap: 16px; font-size: 16px; color: rgba(36,16,19,0.76); line-height: 24px; align-items: flex-start; }
+.product-features .check-icon { width: 24px; height: 24px; flex-shrink: 0; color: rgb(109,40,217); }
+.product-visual {
+  flex: 1 1 50%; background: rgb(233,229,221); border-radius: 24px;
+  display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 460px;
+}
+.product-visual-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(109,40,217,0.08), rgba(107,165,232,0.08));
+  display: flex; align-items: center; justify-content: center; color: rgba(36,16,19,0.2); font-size: 48px; font-weight: 300;
+}
+.becoming-section { background: #1E1145; position: relative; z-index: 1; overflow: hidden; }
+.becoming-section::before {
+  content: ''; position: absolute; right: 10%; top: 30%; width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 70%); pointer-events: none;
+}
+.becoming-inner { padding: 96px 36px; max-width: 1440px; margin: 0 auto; display: flex; gap: 64px; align-items: center; }
+.becoming-text { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.becoming-text h2 { font-size: 64px; font-weight: 500; line-height: 57.6px; color: #fff; }
+.becoming-text p { font-size: 18px; line-height: 30.6px; color: rgba(252,250,247,0.6); max-width: 500px; }
+.becoming-text p em { font-style: italic; color: rgba(252,250,247,0.7); }
+.becoming-text .announcement-link {
+  color: #C4B5FD; font-size: 16px; font-weight: 580; display: inline-flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(196,181,253,0.3); padding-bottom: 2px; width: fit-content;
+}
+.becoming-text .announcement-link:hover { border-color: #C4B5FD; }
+.becoming-text .announcement-link svg { width: 16px; height: 16px; }
+.becoming-image {
+  flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px; height: 420px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.08); font-size: 18px;
+}
+.bottom-cta {
+  background: #1E1145; position: relative; z-index: 1; overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.bottom-cta::before {
+  content: ''; position: absolute; left: 20%; top: 50%; width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(109,40,217,0.12) 0%, transparent 70%);
+  transform: translateY(-50%); pointer-events: none;
+}
+.bottom-cta-inner {
+  padding: 96px 36px; max-width: 1440px; margin: 0 auto; display: flex; gap: 80px;
+  align-items: center; position: relative; z-index: 1;
+}
+.bottom-cta-inner h2 {
+  font-size: 64px; font-weight: 500; line-height: 57.6px; max-width: 500px;
+  background: linear-gradient(90deg, #C4B5FD, #7DD3FC, #E9D5FF);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.bottom-cta-btn {
+  background: #fff; color: #1E1145; border-radius: 9999px; padding: 6px 28px; height: 52px;
+  font-size: 16px; font-weight: 580; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; white-space: nowrap; transition: opacity 0.2s;
+}
+.bottom-cta-btn:hover { opacity: 0.9; }
+.site-footer { background: #fff; padding: 48px 32px 24px; position: relative; z-index: 1; }
+.footer-inner { max-width: 1440px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-brand { display: flex; flex-direction: column; gap: 16px; }
+.footer-brand .footer-tagline { font-size: 14px; color: rgba(36,16,19,0.76); }
+.footer-col h4 { font-size: 14px; font-weight: 600; color: rgb(36,16,19); margin-bottom: 16px; }
+.footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+.footer-col a { font-size: 14px; color: rgba(36,16,19,0.76); transition: color 0.2s; }
+.footer-col a:hover { color: rgb(36,16,19); }
+.footer-bottom { border-top: 1px solid rgba(36,16,19,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 12px; color: rgba(36,16,19,0.5); }
+@media (max-width: 900px) { .mockup-body { grid-template-columns: 1fr; } .mockup-sidebar, .mockup-ai { display: none; } }
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .product-block, .product-block.reversed { flex-direction: column; }
+  .suite-tabs { grid-template-columns: repeat(3, 1fr); }
+  .becoming-inner, .bottom-cta-inner { flex-direction: column; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hero-title-group h1 { font-size: 40px; }
+}
+</style>
+</head>
+<body>
+<header class="site-nav">
+  <nav>
+    <a href="landing.html" style="display:flex;align-items:center;gap:8px;color:#1E1145;">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#6D28D9"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="Source Serif 4,serif" font-size="20" font-weight="700">S</text></svg>
+      <span style="font-size:20px;font-weight:700;letter-spacing:-0.5px;">ScholarSync</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:32px;">
+      <button class="nav-link">Platform <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+      <button class="nav-link">Solutions <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+      <button class="nav-link">Resources <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+      <a href="landing.html" class="nav-link" style="border:none;">Pricing</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="index.html" style="font-size:14px;color:rgba(13,13,26,0.5);">Log in</a>
+      <a href="index.html" class="btn-get-started">
+        Get started
+        <span><svg width="16" height="16" fill="none" stroke="#1E1145" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg></span>
+      </a>
+    </div>
+  </nav>
+</header>
+<section class="hero-section">
+  <div class="hero-title-group">
+    <h1>Where Deep Thinking Becomes Deep Work</h1>
+    <h2>Search the literature. Write with precision. Verify every claim. Present your work. All without leaving one workspace.</h2>
+  </div>
+</section>
+<div class="hero-gradient-band">
+  <div class="hero-mockup">
+    <div class="mockup-toolbar">
+      <div class="mockup-dots"><span></span><span></span><span></span></div>
+      <div class="mockup-filename">research-paper-draft.md</div>
+    </div>
+    <div class="mockup-body">
+      <div class="mockup-sidebar">
+        <div class="mockup-sidebar-label">Cited Sources</div>
+        <div class="mockup-source">
+          <div class="mockup-source-title">Meta-analysis of cardiac biomarkers in acute chest pain</div>
+          <div class="mockup-source-meta">Sharma et al., 2024 · JAMA</div>
+          <span class="badge badge-green">Level I</span>
+        </div>
+        <div class="mockup-source">
+          <div class="mockup-source-title">Diagnostic accuracy of high-sensitivity troponin assays</div>
+          <div class="mockup-source-meta">Chen & Patel, 2023 · Lancet</div>
+          <span class="badge badge-blue">Level II</span>
+        </div>
+        <div class="mockup-source">
+          <div class="mockup-source-title">Emerging role of NT-proBNP in risk stratification</div>
+          <div class="mockup-source-meta">Gupta, 2024 · Indian Heart J</div>
+          <span class="badge badge-amber">Level III</span>
+        </div>
+      </div>
+      <div class="mockup-editor">
+        <div class="mockup-editor-label">Discussion</div>
+        <p>Our findings demonstrate that high-sensitivity cardiac troponin assays significantly improve early diagnostic accuracy in patients presenting with acute chest pain. The pooled sensitivity of 94.2% (95% CI: 91.8–96.1) across 12 studies aligns with recent meta-analyses by <span class="cite">Sharma et al.</span> and extends their work by incorporating Indian population data.</p>
+        <p>Notably, the subgroup analysis revealed a statistically significant difference in diagnostic performance between rural and urban tertiary centres (p = 0.003), a finding not previously reported in the literature.</p>
+        <div class="mockup-cursor"></div>
+      </div>
+      <div class="mockup-ai">
+        <div class="mockup-ai-header">
+          <div class="mockup-ai-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+          <div class="mockup-ai-label">Learn Mode</div>
+        </div>
+        <div class="mockup-ai-card">
+          <div class="mockup-ai-card-label">Socratic prompt</div>
+          <p>Your subgroup analysis is compelling. What confounders might explain the urban-rural disparity beyond pre-analytical handling? Consider the INDIAN-ACS registry data.</p>
+        </div>
+        <div class="mockup-ai-badge">I won't write for you — I'll help you think.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hero-bottom-spacer"></div>
+<div class="main-content">
+  <section class="stats-section">
+    <h2 class="stats-headline">Research workflows are broken.<br>The numbers prove it.</h2>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-number" data-count-to="6" data-suffix="+">0</div><div class="stat-unit">tools</div><div class="stat-desc">the average researcher juggles per paper</div></div>
+      <div class="stat-card"><div class="stat-number" data-count-to="15" data-suffix="–20">0</div><div class="stat-unit">min</div><div class="stat-desc">of focus lost every time you switch between them</div></div>
+      <div class="stat-card"><div class="stat-number" data-count-to="3" data-suffix="–5">0</div><div class="stat-unit">days</div><div class="stat-desc">spent on literature review alone</div></div>
+      <div class="stat-card"><div class="stat-number" data-count-to="40" data-suffix="%">0</div><div class="stat-unit"></div><div class="stat-desc">of researcher time spent on formatting, not thinking</div></div>
+    </div>
+  </section>
+  <section class="suite-section">
+    <div class="suite-sticky-header">
+      <div class="suite-top-row"><h2>Built for deep work</h2><a href="index.html" class="suite-get-btn">Get the suite</a></div>
+      <div class="suite-tabs">
+        <button class="suite-tab active" data-target="product-lit-search"><div class="tab-img-wrap" style="background:#B45309"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M12.5 12.5l3 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>Discover</button>
+        <button class="suite-tab" data-target="product-learn-mode"><div class="tab-img-wrap" style="background:#15803D"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2.5C6.5 2.5 5 4 5 6c0 1.5 1 2.2 1.5 2.8.4.5.5 1 .5 1.7h2c0-.7.1-1.2.5-1.7C10 8.2 11 7.5 11 6c0-2-1.5-3.5-3-3.5z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 12.5h3M7 14h2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>Learn Mode</button>
+        <button class="suite-tab" data-target="product-deep-research"><div class="tab-img-wrap" style="background:#1D4ED8"><img src="icons/creativity.png" alt=""></div>Deep Research</button>
+        <button class="suite-tab" data-target="product-systematic-reviews"><div class="tab-img-wrap" style="background:#4D7C0F"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 2h12v3H3z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M5 8h8v2.5H5z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 13.5h4v2.5H7z" fill="#fff" fill-opacity="0.3" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 5v3M9 10.5v3" stroke="#fff" stroke-width="1.2"/></svg></div>Systematic Reviews</button>
+        <button class="suite-tab" data-target="product-latex-editor"><div class="tab-img-wrap" style="background:#475569"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M6 3.5L2 9l4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 2.5l-3 13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>LaTeX Editor</button>
+        <button class="suite-tab" data-target="product-slides"><div class="tab-img-wrap" style="background:#0E7490"><img src="icons/business-analyst.png" alt=""></div>Stage</button>
+        <button class="suite-tab" data-target="product-illustrations"><div class="tab-img-wrap" style="background:#DC2626"><img src="icons/pen-tool.png" alt=""></div>Canvas</button>
+      </div>
+    </div>
+    <div class="product-blocks">
+      <div class="product-block" id="product-lit-search"><div class="product-text"><h2 class="product-label">Discover</h2><h2 class="product-title">Find every relevant paper in seconds</h2><p class="product-desc">Search across millions of academic papers, preprints, and journals. AI-powered relevance ranking surfaces exactly what you need.</p><a href="#" class="learn-more-link">Learn more about Discover <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Search across PubMed, Semantic Scholar, and more</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>AI-ranked results by relevance to your query</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Save, organize, and annotate papers in one place</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export citations in any format instantly</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Discover</div></div></div>
+      <div class="product-block reversed" id="product-learn-mode"><div class="product-text"><h2 class="product-label">Learn Mode</h2><h2 class="product-title">Understand complex research, effortlessly</h2><p class="product-desc">Turn dense papers into clear explanations. Ask questions, get summaries, and build deep understanding at your own pace.</p><a href="#" class="learn-more-link">Learn more about Learn Mode <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>AI-generated paper summaries and key takeaways</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ask follow-up questions about any section</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Visual concept maps and knowledge graphs</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Adaptive explanations for any expertise level</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Learn Mode</div></div></div>
+      <div class="product-block" id="product-deep-research"><div class="product-text"><h2 class="product-label">Deep Research</h2><h2 class="product-title">Go from question to comprehensive analysis</h2><p class="product-desc">AI that reads hundreds of papers for you, synthesizes findings, identifies gaps, and produces publication-ready research briefs.</p><a href="#" class="learn-more-link">Learn more about Deep Research <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated multi-paper synthesis and analysis</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Identify research gaps and contradictions</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Generate evidence tables and comparisons</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full citations and source traceability</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Deep Research</div></div></div>
+      <div class="product-block reversed" id="product-systematic-reviews"><div class="product-text"><h2 class="product-label">Systematic Reviews</h2><h2 class="product-title">Months of review work, done in days</h2><p class="product-desc">Follow PRISMA guidelines with AI assistance at every step — from screening to data extraction to bias assessment.</p><a href="#" class="learn-more-link">Learn more about Systematic Reviews <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>PRISMA-compliant workflow from start to finish</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>AI-assisted screening and eligibility assessment</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Automated data extraction and quality scoring</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Generate PRISMA flow diagrams automatically</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Systematic Reviews</div></div></div>
+      <div class="product-block" id="product-latex-editor"><div class="product-text"><h2 class="product-label">LaTeX Editor</h2><h2 class="product-title">Write and publish beautiful papers, faster</h2><p class="product-desc">A modern LaTeX editor with real-time preview, AI-powered writing assistance, and one-click journal formatting.</p><a href="#" class="learn-more-link">Learn more about LaTeX Editor <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Real-time LaTeX rendering and preview</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>AI writing assistant for academic prose</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>One-click formatting for 10,000+ journals</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Real-time collaboration with co-authors</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">LaTeX Editor</div></div></div>
+      <div class="product-block reversed" id="product-slides"><div class="product-text"><h2 class="product-label">Stage</h2><h2 class="product-title">Turn your research into stunning presentations</h2><p class="product-desc">Generate conference-ready slides from your papers. Beautiful templates, smart layouts, and figures that tell the story.</p><a href="#" class="learn-more-link">Learn more about Stage <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Auto-generate slides from your manuscript</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Conference-ready templates and themes</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Smart figure placement and annotation</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export to PowerPoint, PDF, or present online</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Stage</div></div></div>
+      <div class="product-block" id="product-illustrations"><div class="product-text"><h2 class="product-label">Canvas</h2><h2 class="product-title">Publication-quality figures, made simple</h2><p class="product-desc">Create scientific illustrations, diagrams, and graphical abstracts with AI assistance. No design skills required.</p><a href="#" class="learn-more-link">Learn more about Canvas <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><ul class="product-features"><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>AI-generated scientific diagrams and figures</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Graphical abstract builder for journals</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pathway, mechanism, and flowchart templates</li><li><svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export in SVG, PNG, or EPS for any journal</li></ul></div><div class="product-visual"><div class="product-visual-placeholder">Canvas</div></div></div>
+    </div>
+  </section>
+</div>
+<section class="becoming-section">
+  <div class="becoming-inner">
+    <div class="becoming-text">
+      <h2>Becoming a Scholar.</h2>
+      <p>When AI works everywhere you research, it starts to change <em>how</em> you research. You stop drowning in tabs. You stop formatting references at midnight. Instead, you have the time to think deeper, write bolder, and ask better questions.</p>
+      <a href="#" class="announcement-link">Read our story <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="becoming-image">[ Learn Mode Conversation ]</div>
+  </div>
+</section>
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <h2>Your next paper deserves a better environment.</h2>
+    <a href="index.html" class="bottom-cta-btn">Get ScholarSync</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="landing.html" style="display:flex;align-items:center;gap:8px;color:#241013;">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#6D28D9"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="Source Serif 4,serif" font-size="20" font-weight="700">S</text></svg>
+          <span style="font-size:18px;font-weight:700;letter-spacing:-0.5px;">ScholarSync</span>
+        </a>
+        <p class="footer-tagline">Built for researchers who take their work seriously.</p>
+      </div>
+      <div class="footer-col"><h4>Products</h4><ul><li><a href="#">Discover</a></li><li><a href="#">Learn Mode</a></li><li><a href="#">Deep Research</a></li><li><a href="#">Systematic Reviews</a></li><li><a href="#">LaTeX Editor</a></li><li><a href="#">Stage</a></li><li><a href="#">Canvas</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Mission</a></li><li><a href="#">Careers</a></li><li><a href="#">Help Center</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Trust</a></li></ul></div>
+      <div class="footer-col"><h4>Connect</h4><ul><li><a href="#">LinkedIn</a></li><li><a href="#">X</a></li><li><a href="#">YouTube</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 ScholarSync. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('.suite-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.suite-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = document.getElementById(tab.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const numEl = entry.target.querySelector('[data-count-to]');
+      if (numEl && !numEl.dataset.animated) {
+        numEl.dataset.animated = 'true';
+        const target = parseInt(numEl.dataset.countTo);
+        const suffix = numEl.dataset.suffix || '';
+        const duration = 1200;
+        const start = performance.now();
+        const animate = (now) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          numEl.textContent = Math.round(eased * target) + suffix;
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        setTimeout(() => requestAnimationFrame(animate), 200);
+      }
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.stat-card').forEach(card => statObserver.observe(card));
+</script>
+</body>
+</html>

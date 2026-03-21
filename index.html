@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarSync — Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; overflow: hidden; height: 100vh; }
+
+:root {
+  --bg-app: #FFFFFF;
+  --bg-sidebar: #1E1145;
+  --bg-surface: #F7F5F3;
+  --bg-hover: rgba(0,0,0,0.03);
+  --bg-active: rgba(0,0,0,0.05);
+  --text-primary: #1C1917;
+  --text-secondary: #78716C;
+  --text-tertiary: #A8A29E;
+  --text-inverse: #FFFFFF;
+  --text-inverse-secondary: rgba(255,255,255,0.55);
+  --accent: #6D28D9;
+  --accent-hover: #5B21B6;
+  --accent-light: rgba(109,40,217,0.08);
+  --accent-border: rgba(109,40,217,0.2);
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.1);
+  --editor-accent: #2C3E6B;
+  --research-accent: #6D28D9;
+  --library-accent: #047857;
+  --discover-accent: #B45309;
+  --review-accent: #4D7C0F;
+  --stage-accent: #0E7490;
+  --learn-accent: #15803D;
+  --latex-accent: #475569;
+  --canvas-accent: #7E22CE;
+  --audit-accent: #92400E;
+  --pulse-accent: #854D0E;
+  --reading-accent: #1D4ED8;
+  --poster-accent: #9333EA;
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Source Serif 4", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --radius: 6px;
+  --transition: 0.15s ease;
+}
+
+/* ═══ SHELL ═══ */
+.app-shell { display: flex; height: 100vh; width: 100vw; }
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width: 224px; flex-shrink: 0; background: var(--bg-sidebar);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 16px 10px; transition: transform 0.2s ease;
+  position: relative; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.sidebar::before {
+  content: ''; position: absolute; top: -40%; left: -30%; width: 160%; height: 80%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.25) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(236,72,153,0.15) 0%, transparent 55%);
+  animation: sidebarGlow 12s ease-in-out infinite alternate;
+  pointer-events: none; z-index: 0;
+}
+.sidebar::after {
+  content: ''; position: absolute; bottom: -30%; right: -20%; width: 140%; height: 70%;
+  background: radial-gradient(ellipse at 60% 50%, rgba(99,102,241,0.2) 0%, transparent 55%),
+              radial-gradient(ellipse at 30% 70%, rgba(168,85,247,0.12) 0%, transparent 50%);
+  animation: sidebarGlow 15s ease-in-out infinite alternate-reverse;
+  pointer-events: none; z-index: 0;
+}
+.sidebar > * { position: relative; z-index: 1; }
+@keyframes sidebarGlow {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate(5%, 8%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-3%, -5%) scale(0.98); opacity: 0.8; }
+}
+.sidebar.hidden { transform: translateX(-100%); position: absolute; height: 100%; }
+.sidebar-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
+.sidebar-logo-mark {
+  width: 28px; height: 28px; background: rgba(255,255,255,0.15); border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+}
+.sidebar-logo-mark span { font-family: var(--font-serif); font-size: 15px; font-weight: 700; color: #fff; }
+.sidebar-logo-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.95); letter-spacing: -0.01em; }
+.sidebar-close {
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,0.5); border-radius: var(--radius);
+}
+.sidebar-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+.sidebar-section { margin-bottom: 18px; }
+.sidebar-section-label {
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.1em; padding: 0 12px; margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+.sidebar-section:hover .sidebar-section-label { color: rgba(255,255,255,0.45); }
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 7px 12px;
+  cursor: pointer; border-radius: var(--radius); position: relative;
+  color: rgba(255,255,255,0.55);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Hover — frosted glass */
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.12);
+  color: rgba(255,255,255,0.95);
+}
+.nav-item:hover .nav-label { color: rgba(255,255,255,0.95); }
+.nav-item:hover .nav-icon { opacity: 1; filter: brightness(1.15); }
+/* Press — physical feedback */
+.nav-item:active { transform: scale(0.98); transition-duration: 0.08s; }
+/* Active state — glass stays on */
+.nav-item.active {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.18), 0 2px 10px rgba(0,0,0,0.1);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 16px; border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, rgba(196,181,253,0.9), rgba(168,85,247,0.6));
+  box-shadow: 0 0 8px rgba(168,85,247,0.3);
+  animation: indicatorIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes indicatorIn {
+  from { height: 0; opacity: 0; }
+  to { height: 16px; opacity: 1; }
+}
+.nav-icon {
+  width: 18px; height: 18px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+  opacity: 0.85;
+}
+.nav-icon svg { width: 18px; height: 18px; opacity: 0.6; transition: opacity 0.2s ease; }
+.nav-item:hover .nav-icon svg { opacity: 0.85; }
+.nav-item.active .nav-icon svg { opacity: 1; }
+.nav-icon img { width: 18px; height: 18px; object-fit: contain; filter: brightness(0) invert(1) opacity(0.6); transition: filter 0.2s ease; }
+.nav-item:hover .nav-icon img { filter: brightness(0) invert(1) opacity(0.85); }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1) opacity(1); }
+.nav-item.active .nav-icon { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 3px rgba(196,181,253,0.3)); }
+.nav-label {
+  font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.55);
+  white-space: nowrap; transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), font-weight 0.15s ease;
+}
+.nav-item.active .nav-label { font-weight: 500; color: #fff; }
+
+.sidebar-bottom { display: flex; flex-direction: column; }
+
+/* User area */
+.sidebar-user {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer; border-radius: var(--radius);
+  transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar-user:hover { background: rgba(255,255,255,0.07); }
+.sidebar-user:active { transform: scale(0.98); transition-duration: 0.08s; }
+.sidebar-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(168,85,247,0.4), rgba(99,102,241,0.3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.9);
+  box-shadow: 0 0 0 1.5px rgba(255,255,255,0.1);
+  transition: box-shadow 0.25s ease;
+}
+.sidebar-user:hover .sidebar-avatar { box-shadow: 0 0 0 1.5px rgba(255,255,255,0.2), 0 0 8px rgba(168,85,247,0.2); }
+.sidebar-user-name { font-size: 12px; color: rgba(255,255,255,0.5); transition: color 0.25s ease; flex: 1; }
+.sidebar-user:hover .sidebar-user-name { color: rgba(255,255,255,0.8); }
+.sidebar-user-chevron { color: rgba(255,255,255,0.25); transition: all 0.2s ease; }
+.sidebar-user:hover .sidebar-user-chevron { color: rgba(255,255,255,0.5); }
+
+/* User panel (expands on click) */
+.sidebar-user-panel {
+  display: none; padding: 6px 10px 4px; margin-top: 2px;
+}
+.sidebar-user-panel.open { display: block; }
+.sidebar-user-panel-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; color: rgba(255,255,255,0.45);
+  transition: all 0.15s ease;
+}
+.sidebar-user-panel-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
+.sidebar-user-panel-item svg { width: 14px; height: 14px; }
+/* Theme toggle switch — Uiverse-inspired */
+.theme-switch {
+  width: 38px; height: 22px; border-radius: 11px;
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.15);
+  position: relative; cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.theme-switch::after {
+  content: ''; position: absolute; top: 1.5px; left: 2px;
+  width: 17px; height: 17px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.theme-switch.dark { background: #1E1145; border-color: rgba(109,40,217,0.5); }
+.theme-switch.dark::after { transform: translateX(15px); background: #C4B5FD; }
+
+/* ═══ MAIN ═══ */
+.main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.topbar {
+  height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--bg-app);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-menu-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: var(--radius);
+}
+.topbar-menu-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+.topbar-menu-btn svg { width: 18px; height: 18px; }
+.topbar-breadcrumb { font-size: 13px; color: var(--text-secondary); }
+.topbar-breadcrumb strong { color: var(--text-primary); font-weight: 500; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.cmd-trigger {
+  display: flex; align-items: center; gap: 8px; padding: 5px 12px;
+  background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer;
+  border-radius: var(--radius); transition: border-color var(--transition);
+}
+.cmd-trigger:hover { border-color: var(--border-strong); }
+.cmd-trigger span { font-size: 12px; color: var(--text-tertiary); }
+.cmd-trigger kbd {
+  font-family: var(--font-sans); font-size: 10px; color: var(--text-tertiary);
+  background: var(--bg-app); padding: 1px 5px; border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* ═══ VIEW ═══ */
+.view { display: none; flex: 1; overflow: hidden; }
+.view.active { display: flex; flex-direction: column; }
+
+/* ═══ DASHBOARD ═══ */
+.dashboard { padding: 32px 48px; overflow-y: auto; flex: 1; }
+.gdocs-topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.gdocs-new-btn {
+  display: flex; align-items: center; gap: 6px; padding: 8px 20px;
+  background: var(--bg-app); color: var(--text-primary); font-family: var(--font-sans);
+  font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-strong);
+  border-radius: var(--radius); transition: all var(--transition);
+}
+.gdocs-new-btn:hover { border-color: var(--text-secondary); }
+.gdocs-new-btn svg { stroke: var(--text-primary); }
+.gdocs-search {
+  display: flex; align-items: center; gap: 8px; padding: 7px 14px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius);
+  flex: 1; max-width: 360px;
+}
+.gdocs-search:focus-within { border-color: var(--accent); }
+.gdocs-search input {
+  flex: 1; border: none; background: none; font-family: var(--font-sans);
+  font-size: 13px; color: var(--text-primary); outline: none;
+}
+.gdocs-search input::placeholder { color: var(--text-tertiary); }
+.gdocs-view-toggles { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.gdocs-layout-toggle {
+  display: flex; align-items: center; gap: 1px; margin-left: 12px;
+  background: var(--bg-surface); border-radius: var(--radius); padding: 2px; border: 1px solid var(--border);
+}
+.gdocs-layout-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 26px; border-radius: 4px; cursor: pointer;
+  color: var(--text-tertiary); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gdocs-layout-btn:hover { color: var(--text-secondary); }
+.gdocs-layout-btn.active { background: var(--bg-app); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.gdocs-layout-btn svg { width: 14px; height: 14px; }
+
+/* Grid view */
+.gdocs-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;
+}
+.gdocs-grid .gdocs-card {
+  background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius);
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
+}
+.gdocs-card:hover { border-color: var(--border-strong); box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+.gdocs-card-preview {
+  height: 140px; padding: 16px 14px 12px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border); overflow: hidden; position: relative;
+}
+.gdocs-card-preview::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 32px;
+  background: linear-gradient(transparent, var(--bg-surface));
+}
+.gdocs-card-preview-title {
+  font-family: var(--font-serif); font-size: 10px; font-weight: 600;
+  color: var(--text-primary); line-height: 1.3; margin-bottom: 6px;
+}
+.gdocs-card-preview-lines {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.gdocs-card-preview-line {
+  height: 3px; border-radius: 1.5px; background: var(--text-tertiary); opacity: 0.25;
+}
+.gdocs-card-info { padding: 10px 14px; }
+.gdocs-card-info-row { display: flex; align-items: center; gap: 8px; }
+.gdocs-card-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.gdocs-card-title {
+  font-size: 13px; font-weight: 500; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;
+}
+.gdocs-card-meta {
+  font-size: 11px; color: var(--text-tertiary); margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gdocs-card.filtered { display: none; }
+.gdocs-status-filters { display: flex; gap: 2px; }
+.gdocs-type-sep { width: 1px; height: 18px; background: var(--border); margin: 0 10px; }
+.gdocs-type-filters { display: flex; gap: 2px; }
+.gdocs-filter {
+  padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--text-tertiary);
+  cursor: pointer; transition: all var(--transition); border: 1px solid transparent;
+  border-radius: var(--radius);
+}
+.gdocs-filter:hover { color: var(--text-secondary); }
+.status-filter.active { color: var(--text-primary); background: var(--bg-surface); border-color: var(--border); font-weight: 600; }
+.type-filter.active { color: var(--accent); background: var(--accent-light); border-color: var(--accent-border); }
+
+.new-dropdown {
+  display: none; position: absolute; z-index: 50; background: var(--bg-app);
+  border: 1px solid var(--border-strong); box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  padding: 4px; border-radius: var(--radius); margin-top: -4px; min-width: 220px;
+}
+.new-dropdown.open { display: block; }
+.new-dropdown-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  font-size: 13px; font-weight: 500; color: var(--text-primary); cursor: pointer;
+  border-radius: 4px; transition: background 0.08s;
+}
+.new-dropdown-item:hover { background: var(--bg-surface); }
+.dash-action-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.gdocs-section-label {
+  font-size: 11px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+}
+.gdocs-list { display: flex; flex-direction: column; }
+.gdocs-item {
+  display: flex; align-items: center; gap: 14px; padding: 12px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border); transition: background 0.08s; border-radius: 0;
+}
+.gdocs-item:first-child { border-top: 1px solid var(--border); }
+.gdocs-item:hover { background: var(--bg-hover); }
+.gdocs-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.gdocs-item-body { flex: 1; min-width: 0; }
+.gdocs-item-title { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gdocs-item-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.gdocs-item-time { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; }
+.gdocs-item.filtered { display: none; }
+
+/* ═══ LATEX WORKSPACE ═══ */
+.ltx { display: flex; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+
+/* Toolbar */
+.ltx-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px 0 16px; height: 44px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ltx-toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; margin-right: 16px; overflow: hidden; }
+.ltx-toolbar-right { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.ltx-title {
+  font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+  color: var(--text-primary); border: none; background: none; outline: none; flex: 1; min-width: 0;
+}
+.ltx-save { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; white-space: nowrap; }
+.ltx-btn {
+  display: flex; align-items: center; gap: 5px; padding: 5px 10px;
+  font-size: 12px; font-weight: 500; color: var(--text-tertiary); cursor: pointer;
+  border-radius: var(--radius); transition: all 0.15s ease; border: none; background: none;
+}
+.ltx-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+.ltx-btn.active { color: var(--text-primary); background: var(--bg-surface); }
+.ltx-btn svg { width: 14px; height: 14px; }
+.ltx-btn.compile { background: var(--accent); color: #fff; padding: 5px 14px; }
+.ltx-btn.compile:hover { background: var(--accent-hover); }
+.ltx-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+
+/* Layout toggle — which panes are visible */
+.ltx-layout-seg {
+  display: flex; align-items: center; gap: 1px;
+  background: var(--bg-surface); border-radius: var(--radius); padding: 2px; border: 1px solid var(--border);
+}
+.ltx-layout-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 24px; border-radius: 4px; cursor: pointer; color: var(--text-tertiary);
+  transition: all 0.15s ease;
+}
+.ltx-layout-btn:hover { color: var(--text-secondary); }
+.ltx-layout-btn.active { background: var(--bg-app); color: var(--text-primary); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.ltx-layout-btn svg { width: 14px; height: 14px; }
+
+/* More dropdown */
+.ltx-more-wrap { position: relative; }
+.ltx-dropdown {
+  display: none; position: absolute; right: 0; top: 32px; z-index: 60;
+  background: var(--bg-app); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 4px; min-width: 180px;
+}
+.ltx-dropdown.open { display: block; }
+.ltx-dd-item {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+  font-size: 12.5px; color: var(--text-primary); cursor: pointer; border-radius: 4px;
+}
+.ltx-dd-item:hover { background: var(--bg-hover); }
+.ltx-dd-item svg { width: 14px; height: 14px; color: var(--text-tertiary); }
+.ltx-dd-shortcut { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); margin-left: auto; padding-left: 16px; }
+.ltx-dd-section { padding: 6px 10px 3px; font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; }
+.ltx-dd-section:first-child { padding-top: 4px; }
+.ltx-dd-sep { height: 1px; background: var(--border); margin: 4px 6px; }
+
+/* Split container */
+.ltx-split { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+/* Resize handle */
+.ltx-resize {
+  width: 8px; cursor: col-resize; background: transparent; flex-shrink: 0;
+  position: relative; z-index: 5; transition: all 0.2s ease;
+  margin: 0 -3px;
+}
+.ltx-resize::after {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 100%; background: var(--border);
+  transition: all 0.2s ease;
+}
+.ltx-resize:hover::after { width: 3px; background: var(--accent); opacity: 0.4; border-radius: 2px; }
+.ltx-resize:active::after { width: 3px; background: var(--accent); opacity: 0.7; border-radius: 2px; }
+
+/* Source pane */
+.ltx-source {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
+  position: relative; background: #FAFAF9;
+}
+.ltx-source.hidden { display: none; }
+.ltx-code-wrap { flex: 1; overflow: auto; }
+.ltx-code {
+  font-family: 'JetBrains Mono', 'Fira Code', var(--font-mono); font-size: 13px;
+  line-height: 1.7; padding: 20px 20px 20px 58px; white-space: pre-wrap;
+  color: var(--text-primary); min-height: 100%; position: relative;
+}
+.ltx-code .ln {
+  position: absolute; left: 0; width: 46px; text-align: right; padding-right: 14px;
+  color: #C4C0BC; font-size: 12px; user-select: none;
+}
+.ltx-code .cm { color: #7C3AED; font-weight: 500; }
+.ltx-code .ev { color: #0891B2; }
+.ltx-code .mt { color: #059669; }
+.ltx-code .br { color: #B45309; }
+.ltx-code .co { color: #A8A29E; font-style: italic; }
+.ltx-hint {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; color: var(--text-tertiary); background: var(--bg-app);
+  padding: 4px 14px; border-radius: 20px; border: 1px solid var(--border);
+  pointer-events: none; opacity: 0.5;
+}
+
+/* Preview pane */
+.ltx-preview {
+  flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: auto;
+  background: var(--bg-app);
+}
+.ltx-preview.hidden { display: none; }
+.ltx-preview-inner {
+  padding: 40px 48px; max-width: 720px; margin: 0 auto;
+  font-family: 'Computer Modern Serif', 'Latin Modern Roman', 'Times New Roman', serif;
+  font-size: 11pt; line-height: 1.6; color: #333;
+}
+.ltx-preview-inner h1 { font-size: 1.4em; font-weight: 700; text-align: center; margin-bottom: 4px; }
+.ltx-preview-inner .pa { text-align: center; font-size: 0.95em; color: #555; margin-bottom: 2px; }
+.ltx-preview-inner .pd { text-align: center; font-size: 0.85em; color: #777; margin-bottom: 20px; font-style: italic; }
+.ltx-preview-inner .pab { margin: 16px 32px; padding: 12px 16px; border-left: 2px solid var(--border-strong); font-size: 0.9em; }
+.ltx-preview-inner .pab-t { font-weight: 700; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.ltx-preview-inner h2 { font-size: 1.15em; font-weight: 700; margin: 24px 0 8px; }
+.ltx-preview-inner h3 { font-size: 1em; font-weight: 700; margin: 16px 0 6px; font-style: italic; }
+.ltx-preview-inner p { margin-bottom: 10px; text-align: justify; }
+.ltx-preview-inner .meq { text-align: center; margin: 16px 0; font-style: italic; font-size: 1.05em; }
+
+/* Pane labels — subtle, top-left of each pane */
+.ltx-pane-label {
+  position: absolute; top: 8px; left: 14px; z-index: 2;
+  font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase;
+  letter-spacing: 0.06em; opacity: 0.5; pointer-events: none;
+}
+
+/* Files panel — slides in from left */
+.ltx-files {
+  width: 0; flex-shrink: 0; background: var(--bg-app); overflow: hidden;
+  border-right: 1px solid transparent; display: flex; flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.ltx-files.open { width: 220px; border-right-color: var(--border); }
+.ltx-files-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ltx-files-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.ltx-files-close {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: 4px;
+}
+.ltx-files-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+.ltx-files-list { flex: 1; overflow-y: auto; padding: 6px; }
+.ltx-fi {
+  display: flex; align-items: center; gap: 8px; padding: 5px 10px;
+  border-radius: 4px; cursor: pointer; font-size: 12.5px; color: var(--text-secondary);
+  transition: all 0.12s ease;
+}
+.ltx-fi:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ltx-fi.act { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+.ltx-fi svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ltx-fi .main-badge {
+  font-size: 9px; font-weight: 600; color: var(--accent); background: var(--accent-light);
+  padding: 1px 5px; border-radius: 3px; margin-left: auto;
+}
+.ltx-outline-sec {
+  border-top: 1px solid var(--border); padding: 8px 6px; flex-shrink: 0;
+}
+.ltx-outline-title {
+  padding: 4px 10px; font-size: 10px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
+}
+.ltx-oi {
+  padding: 3px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  border-radius: 4px; transition: all 0.12s ease;
+}
+.ltx-oi:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ltx-oi.sub { padding-left: 22px; }
+
+/* Cite panel — slides in from right edge of source pane */
+.ltx-cite {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 0; z-index: 10;
+  background: var(--bg-app); border-left: 1px solid transparent;
+  box-shadow: -4px 0 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;
+  overflow: hidden; transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.ltx-cite.open { width: 300px; border-left-color: var(--border); }
+.ltx-cite-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ltx-cite-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.ltx-cite-close {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: 4px;
+}
+.ltx-cite-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+.ltx-cite-search {
+  margin: 10px 14px; padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 12.5px; font-family: var(--font-sans); background: var(--bg-surface);
+  outline: none; color: var(--text-primary);
+}
+.ltx-cite-search:focus { border-color: var(--accent); }
+.ltx-cite-results { flex: 1; overflow-y: auto; padding: 0 10px 10px; }
+.ltx-cite-card {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 8px; cursor: pointer; transition: all 0.12s ease;
+}
+.ltx-cite-card:hover { border-color: var(--accent); background: var(--accent-light); }
+.ltx-cite-card-title { font-size: 12.5px; font-weight: 500; color: var(--text-primary); line-height: 1.4; margin-bottom: 4px; }
+.ltx-cite-card-meta { font-size: 11px; color: var(--text-tertiary); }
+.ltx-cite-card-actions { display: flex; gap: 6px; margin-top: 6px; }
+.ltx-cite-card-btn {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-app);
+  transition: all 0.12s ease;
+}
+.ltx-cite-card-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ltx-cite-card-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.ltx-cite-card-btn.primary:hover { background: var(--accent-hover); }
+
+/* Right panel — slides over preview pane for Comments, Track Changes, Version History, Figures */
+.ltx-rpanel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 0; z-index: 10;
+  background: var(--bg-app); border-left: 1px solid transparent;
+  box-shadow: -4px 0 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;
+  overflow: hidden; transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.ltx-rpanel.open { width: 300px; border-left-color: var(--border); }
+.ltx-rpanel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ltx-rpanel-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.ltx-rpanel-close {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: 4px;
+}
+.ltx-rpanel-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+.ltx-rpanel-body { flex: 1; overflow-y: auto; padding: 10px 12px; }
+
+/* Version history items */
+.ltx-ver {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 8px; cursor: pointer; transition: all 0.12s ease;
+}
+.ltx-ver:hover { border-color: var(--accent); background: var(--accent-light); }
+.ltx-ver-info { flex: 1; }
+.ltx-ver-label { font-size: 12.5px; font-weight: 500; color: var(--text-primary); }
+.ltx-ver-time { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+.ltx-ver-btn {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+  border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-app);
+  cursor: pointer; transition: all 0.12s ease;
+}
+.ltx-ver-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Comment items */
+.ltx-comment {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 8px;
+}
+.ltx-comment-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ltx-comment-avatar {
+  width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.ltx-comment-author { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+.ltx-comment-time { font-size: 10px; color: var(--text-tertiary); margin-left: auto; }
+.ltx-comment-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+.ltx-comment-line { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); margin-top: 6px; }
+.ltx-comment-actions { display: flex; gap: 6px; margin-top: 8px; }
+.ltx-comment-btn {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+  border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-app);
+  cursor: pointer;
+}
+.ltx-comment-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Track changes items */
+.ltx-change {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 8px;
+}
+.ltx-change-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ltx-change-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.ltx-change-author { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+.ltx-change-time { font-size: 10px; color: var(--text-tertiary); margin-left: auto; }
+.ltx-change-diff { font-family: var(--font-mono); font-size: 12px; padding: 6px 8px; background: var(--bg-surface); border-radius: 4px; margin-bottom: 6px; }
+.ltx-change-ins { color: #16A34A; }
+.ltx-change-del { color: #DC2626; text-decoration: line-through; }
+.ltx-change-actions { display: flex; gap: 6px; }
+.ltx-change-accept {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+  background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; cursor: pointer;
+}
+.ltx-change-reject {
+  font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+  background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; cursor: pointer;
+}
+.ltx-change-pending {
+  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+  background: #FEF3C7; color: #92400E;
+}
+
+/* Figures grid */
+.ltx-fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ltx-fig-card {
+  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  cursor: pointer; transition: all 0.12s ease;
+}
+.ltx-fig-card:hover { border-color: var(--accent); }
+.ltx-fig-thumb {
+  height: 80px; background: var(--bg-surface); display: flex; align-items: center;
+  justify-content: center; color: var(--text-tertiary); font-size: 11px;
+}
+.ltx-fig-name { padding: 6px 8px; font-size: 11px; color: var(--text-secondary); }
+.ltx-fig-actions { display: flex; gap: 4px; padding: 0 8px 6px; }
+.ltx-fig-btn {
+  font-size: 9px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
+  border: 1px solid var(--border); color: var(--text-tertiary); cursor: pointer;
+}
+.ltx-fig-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ltx-fig-upload {
+  grid-column: 1 / -1; border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 16px; text-align: center; color: var(--text-tertiary); font-size: 12px;
+  cursor: pointer; transition: all 0.12s ease;
+}
+.ltx-fig-upload:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Collab bar */
+.ltx-collab-users { display: flex; flex-direction: column; gap: 8px; }
+.ltx-collab-user {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.ltx-collab-avatar {
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.ltx-collab-name { font-size: 12.5px; font-weight: 500; color: var(--text-primary); }
+.ltx-collab-status { font-size: 10px; color: var(--text-tertiary); }
+.ltx-collab-dot { width: 6px; height: 6px; border-radius: 50%; background: #34D399; margin-left: auto; }
+
+/* Toast notification */
+.ltx-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--text-primary); color: #fff; padding: 10px 20px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 500; z-index: 100; opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1); pointer-events: none;
+}
+.ltx-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* ═══ EDITOR ═══ */
+.editor-clean { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.editor-toolbar-clean {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 44px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.editor-toolbar-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.editor-title-clean {
+  font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+  color: var(--text-primary); border: none; background: none; outline: none; flex: 1; min-width: 0;
+}
+.editor-save-status { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; }
+.editor-toolbar-right { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.editor-tb-btn {
+  display: flex; align-items: center; gap: 5px; padding: 5px 10px;
+  font-size: 12px; font-weight: 500; color: var(--text-tertiary); cursor: pointer;
+  border-radius: var(--radius); transition: all var(--transition);
+}
+.editor-tb-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+.editor-tb-btn svg { width: 14px; height: 14px; }
+.editor-tb-btn.audit-btn { color: var(--audit-accent); }
+.editor-tb-btn.audit-btn:hover { background: rgba(146,64,14,0.06); }
+.editor-tb-badge {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  background: var(--bg-surface); padding: 1px 5px; color: var(--text-tertiary); border-radius: 3px;
+}
+.editor-tb-sep { width: 1px; height: 18px; background: var(--border); margin: 0 6px; }
+.editor-writing-surface { flex: 1; overflow-y: auto; display: flex; justify-content: center; }
+.editor-writing-content { width: 100%; max-width: 700px; padding: 56px 24px 160px; }
+.editor-writing-content h1 {
+  font-family: var(--font-serif); font-size: 34px; font-weight: 700;
+  color: var(--text-primary); line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 8px;
+}
+.editor-writing-content .doc-meta {
+  font-size: 13px; color: var(--text-tertiary); margin-bottom: 40px; font-family: var(--font-mono);
+}
+.editor-writing-content h2 {
+  font-family: var(--font-serif); font-size: 22px; font-weight: 600;
+  color: var(--text-primary); margin-top: 44px; margin-bottom: 16px; letter-spacing: -0.015em;
+}
+.editor-writing-content p { font-size: 16px; color: var(--text-primary); line-height: 1.8; margin-bottom: 18px; }
+.cite {
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+  cursor: pointer; border-bottom: 1px dashed var(--accent); padding: 0 2px;
+}
+
+/* ═══ BUDDY FAB ═══ */
+.buddy-fab {
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  width: 52px; height: 52px; background: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: transform var(--transition), box-shadow var(--transition);
+  overflow: hidden;
+}
+.buddy-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,0,0,0.2); }
+.buddy-fab img { width: 100%; height: 100%; object-fit: cover; }
+.buddy-fab.panel-open { display: none; }
+
+/* ═══ RESIZE HANDLES ═══ */
+.resize-handle {
+  width: 4px; flex-shrink: 0; cursor: col-resize; background: transparent;
+  position: relative; z-index: 10; transition: background 0.15s;
+}
+.resize-handle:hover, .resize-handle.active { background: var(--accent); }
+.resize-handle::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -3px; right: -3px;
+}
+
+/* ═══ BUDDY PANEL ═══ */
+.buddy-panel-dock {
+  width: 0; flex-shrink: 0; background: var(--bg-app);
+  border-left: 1px solid var(--border); display: none; flex-direction: column;
+  overflow: hidden; min-width: 0; transition: background 0.3s ease;
+}
+.buddy-panel-dock.open { display: flex; width: 360px; }
+.buddy-panel-dock.mode-draft { background: #F8FAFF; }
+.buddy-panel-dock.mode-learn { background: #F5FBF8; }
+
+/* Header — bold, owns the space */
+.buddy-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 16px; flex-shrink: 0;
+}
+.buddy-header-left { display: flex; align-items: center; gap: 12px; }
+.buddy-avatar {
+  width: 36px; height: 36px; border-radius: 10px; overflow: hidden; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.buddy-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.buddy-name { font-size: 17px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+.buddy-header-right { display: flex; align-items: center; gap: 2px; }
+
+/* Mode tabs — Superhuman card-style with colored icons */
+.buddy-mode-tabs {
+  display: flex; gap: 6px; padding: 10px 12px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+}
+.buddy-mode-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 9px 0; font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+  text-align: center; cursor: pointer; color: var(--text-tertiary);
+  border: 1.5px solid transparent; border-radius: 10px;
+  background: none; transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.buddy-mode-tab:hover {
+  color: var(--text-secondary); background: var(--bg-surface);
+  transform: translateY(-1px);
+}
+.buddy-mode-tab:active { transform: translateY(0) scale(0.98); }
+.buddy-mode-tab .tab-dot {
+  width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.buddy-mode-tab:hover .tab-dot { transform: scale(1.12) rotate(2deg); }
+.buddy-mode-tab .tab-dot svg { width: 14px; height: 14px; }
+
+/* Active states — bold border card */
+.buddy-mode-tab.active {
+  color: var(--text-primary); font-weight: 600;
+  background: var(--bg-app);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.buddy-mode-tab[data-bmode="default"].active { border-color: var(--accent); }
+.buddy-mode-tab[data-bmode="draft"].active { border-color: #0891B2; }
+.buddy-mode-tab[data-bmode="learn"].active { border-color: var(--learn-accent); }
+
+/* Tab icon squares — Superhuman product-logo style: solid color, white symbol */
+.buddy-mode-tab[data-bmode="default"] .tab-dot { background: var(--accent); }
+.buddy-mode-tab[data-bmode="default"] .tab-dot svg { color: #fff; }
+.buddy-mode-tab[data-bmode="draft"] .tab-dot { background: #0891B2; }
+.buddy-mode-tab[data-bmode="draft"] .tab-dot svg { color: #fff; }
+.buddy-mode-tab[data-bmode="learn"] .tab-dot { background: var(--learn-accent); }
+.buddy-mode-tab[data-bmode="learn"] .tab-dot svg { color: #fff; }
+.buddy-icon-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: 20px;
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  background: transparent; border: none;
+}
+.buddy-icon-btn:hover { background: rgba(109,40,217,0.12); color: var(--accent); }
+.buddy-icon-btn:hover .svg-icon { animation: buddySpin 2s linear infinite; }
+.buddy-icon-btn:active { transform: scale(0.92); }
+.buddy-icon-btn.close-btn:hover { background: rgba(0,0,0,0.06); color: var(--text-primary); }
+@keyframes buddySpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Buddy gear popover */
+.buddy-gear-popover {
+  display: none; position: absolute; right: 16px; top: 44px; z-index: 60;
+  background: var(--bg-app); border: 1px solid var(--border-strong);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-radius: var(--radius);
+  width: 260px; padding: 12px;
+}
+.buddy-gear-popover.open { display: block; }
+.gear-section-label { font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.gear-option {
+  display: flex; align-items: flex-start; gap: 8px; padding: 8px; cursor: pointer;
+  border-radius: 4px; transition: background 0.08s;
+}
+.gear-option:hover { background: var(--bg-surface); }
+.gear-radio {
+  width: 14px; height: 14px; border: 2px solid var(--border-strong); border-radius: 50%;
+  flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;
+}
+.gear-radio.active { border-color: var(--accent); }
+.gear-radio.active::after { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+.gear-option-text { display: flex; flex-direction: column; gap: 1px; }
+.gear-option-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.gear-option-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; }
+
+.buddy-messages {
+  flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px;
+}
+.buddy-msg { max-width: 90%; padding: 10px 14px; font-size: 13px; line-height: 1.55; border-radius: var(--radius); }
+.buddy-msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
+.buddy-msg.buddy { align-self: flex-start; background: var(--bg-surface); color: var(--text-primary); }
+.buddy-msg .buddy-msg-tag {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  color: var(--accent); margin-bottom: 4px;
+}
+.buddy-input-area {
+  padding: 12px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+}
+.buddy-input-area input {
+  flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-surface); font-family: var(--font-sans); font-size: 13px;
+  color: var(--text-primary); outline: none; transition: border-color var(--transition);
+}
+.buddy-input-area input:focus { border-color: var(--accent); }
+.buddy-input-area input::placeholder { color: var(--text-tertiary); }
+.buddy-send-btn {
+  font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+  background: var(--accent); color: #fff;
+  padding: 0.5em 0.8em 0.5em 0.7em;
+  display: flex; align-items: center; border: none;
+  border-radius: var(--radius); overflow: hidden;
+  transition: all 0.2s; cursor: pointer; flex-shrink: 0;
+}
+.buddy-send-btn span {
+  display: block; margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+.buddy-send-btn .svg-wrapper-1 { display: flex; align-items: center; }
+.buddy-send-btn .svg-wrapper {
+  display: flex; align-items: center;
+}
+.buddy-send-btn svg {
+  display: block; transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+  width: 16px; height: 16px;
+}
+.buddy-send-btn:hover .svg-wrapper { animation: send-fly 0.6s ease-in-out infinite alternate; }
+.buddy-send-btn:hover svg { transform: translateX(1.2em) rotate(45deg) scale(1.1); }
+.buddy-send-btn:hover span { transform: translateX(5em); }
+.buddy-send-btn:active { transform: scale(0.95); }
+@keyframes send-fly { from { transform: translateY(0.1em); } to { transform: translateY(-0.1em); } }
+
+/* ═══ PLACEHOLDERS ═══ */
+.placeholder-view {
+  flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;
+}
+.placeholder-view h2 { font-family: var(--font-serif); font-size: 24px; font-weight: 600; }
+.placeholder-view p { font-size: 14px; color: var(--text-tertiary); max-width: 400px; text-align: center; }
+
+/* ═══ COMMAND PALETTE ═══ */
+.cmd-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none;
+  align-items: flex-start; justify-content: center; padding-top: 18vh; z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+.cmd-overlay.open { display: flex; }
+.cmd-palette {
+  width: 520px; background: var(--bg-app); border: 1px solid var(--border-strong);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12); border-radius: var(--radius); overflow: hidden;
+}
+.cmd-input-wrap {
+  display: flex; align-items: center; padding: 14px 18px; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.cmd-input-wrap svg { color: var(--text-tertiary); flex-shrink: 0; width: 16px; height: 16px; }
+.cmd-input-wrap input {
+  flex: 1; border: none; background: none; font-family: var(--font-sans);
+  font-size: 15px; color: var(--text-primary); outline: none;
+}
+.cmd-input-wrap input::placeholder { color: var(--text-tertiary); }
+.cmd-results { padding: 6px; max-height: 320px; overflow-y: auto; }
+.cmd-group-label {
+  font-size: 10px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px 3px;
+}
+.cmd-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  cursor: pointer; border-radius: 4px; transition: background 0.08s;
+}
+.cmd-item:hover { background: var(--bg-surface); }
+.cmd-item-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.cmd-item-label { font-size: 13px; color: var(--text-primary); flex: 1; }
+.cmd-item-hint { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="sidebar-top-row">
+        <a href="landing.html" class="sidebar-logo" style="text-decoration:none;color:inherit;">
+          <div class="sidebar-logo-mark"><span>S</span></div>
+          <div class="sidebar-logo-text">ScholarSync</div>
+        </a>
+        <div class="sidebar-close" id="sidebarClose"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M10 2l-6 6 6 6"/></svg></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-nav">
+          <div class="nav-item active" data-view="dashboard"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff"/></svg></div><div class="nav-label">Projects</div></div>
+        </div>
+      </div>
+      <div class="sidebar-section"><div class="sidebar-section-label">Create</div><div class="sidebar-nav">
+        <div class="nav-item" data-view="editor"><div class="nav-icon"><img src="icons/edit.png" alt="Draft"></div><div class="nav-label">Draft</div></div>
+        <div class="nav-item" data-view="latex"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M6 3.5L2 9l4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 2.5l-3 13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="nav-label">LaTeX</div></div>
+        <div class="nav-item" data-view="canvas"><div class="nav-icon"><img src="icons/pen-tool.png" alt="Canvas"></div><div class="nav-label">Canvas</div></div>
+        <div class="nav-item" data-view="poster"><div class="nav-icon"><img src="icons/poster.png" alt="Poster"></div><div class="nav-label">Poster</div></div>
+        <div class="nav-item" data-view="stage"><div class="nav-icon"><img src="icons/business-analyst.png" alt="Stage" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Stage</div></div>
+      </div></div>
+      <div class="sidebar-section"><div class="sidebar-section-label">Research</div><div class="sidebar-nav">
+        <div class="nav-item" data-view="discover"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M12.5 12.5l3 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="nav-label">Discover</div></div>
+        <div class="nav-item" data-view="reading-room"><div class="nav-icon"><img src="icons/reading-room.png" alt="Reading Room"></div><div class="nav-label">Reading Room</div></div>
+        <div class="nav-item" data-view="pulse"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="#fff" stroke="none"/></svg></div><div class="nav-label">Pulse</div></div>
+        <div class="nav-item" data-view="deep-research"><div class="nav-icon"><img src="icons/creativity.png" alt="Deep Research" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Deep Research</div></div>
+        <div class="nav-item" data-view="library"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="3" height="12" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1"/><rect x="7.5" y="2" width="3" height="13" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.7"/><rect x="12" y="4" width="3" height="11" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.45"/></svg></div><div class="nav-label">Library</div></div>
+        <div class="nav-item" data-view="systematic-review"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M3 2h12v3H3z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M5 8h8v2.5H5z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 13.5h4v2.5H7z" fill="#fff" fill-opacity="0.3" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 5v3M9 10.5v3" stroke="#fff" stroke-width="1.2"/></svg></div><div class="nav-label">Systematic Review</div></div>
+      </div></div>
+      <div class="sidebar-section"><div class="sidebar-section-label">Audit</div><div class="sidebar-nav">
+        <div class="nav-item" data-view="audit"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2L3 4.5v4.5c0 4 2.5 6 6 7.5 3.5-1.5 6-3.5 6-7.5V4.5L9 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 9l2 2 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-label">Integrity Check</div></div>
+      </div></div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user" id="sidebarUserBtn"><div class="sidebar-avatar">SS</div><div class="sidebar-user-name">Dr. Singh</div><svg class="sidebar-user-chevron" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></div>
+      <div class="sidebar-user-panel" id="sidebarUserPanel">
+        <div class="sidebar-user-panel-item"><span>Dark mode</span><div class="theme-switch" id="themeSwitch"></div></div>
+        <div class="sidebar-user-panel-item"><span>Settings</span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <div class="sidebar-user-panel-item"><span>Keyboard shortcuts</span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="14" height="14"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg></div>
+        <div class="sidebar-user-panel-item"><span>Sign out</span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="14" height="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-linecap="round"/><path d="M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- SIDEBAR RESIZE HANDLE -->
+  <div class="resize-handle" id="sidebarResizeHandle"></div>
+
+  <!-- MAIN -->
+  <main class="main-area">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-menu-btn" id="sidebarOpen"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14"/></svg></div>
+        <div class="topbar-breadcrumb" id="breadcrumb"><strong>Projects</strong></div>
+      </div>
+      <div class="topbar-right">
+        <div class="cmd-trigger" id="cmdTrigger">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+          <span>Search or jump to...</span><kbd>&#8984;K</kbd>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard"><div class="dashboard">
+      <div class="gdocs-topbar">
+        <button class="gdocs-new-btn" id="newProjectBtn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg> New</button>
+        <div class="gdocs-search"><svg width="14" height="14" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input type="text" placeholder="Search all projects..." id="projectSearch"></div>
+        <div class="gdocs-view-toggles">
+          <div class="gdocs-status-filters"><div class="gdocs-filter status-filter active" data-status="all">All</div><div class="gdocs-filter status-filter" data-status="active">Active</div><div class="gdocs-filter status-filter" data-status="completed">Completed</div></div>
+          <div class="gdocs-type-sep"></div>
+          <div class="gdocs-type-filters"><div class="gdocs-filter type-filter" data-type-filter="draft">Draft</div><div class="gdocs-filter type-filter" data-type-filter="research">Research</div><div class="gdocs-filter type-filter" data-type-filter="review">Review</div><div class="gdocs-filter type-filter" data-type-filter="presentation">Presentation</div></div>
+          <div class="gdocs-layout-toggle">
+            <div class="gdocs-layout-btn active" data-layout="list" title="List view"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h12"/></svg></div>
+            <div class="gdocs-layout-btn" data-layout="grid" title="Grid view"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="5" height="5" rx="1"/><rect x="9.5" y="1.5" width="5" height="5" rx="1"/><rect x="1.5" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <div class="new-dropdown" id="newDropdown">
+        <div class="new-dropdown-item" data-nav="editor"><div class="dash-action-dot" style="background:var(--editor-accent)"></div> New Draft</div>
+        <div class="new-dropdown-item"><div class="dash-action-dot" style="background:var(--latex-accent)"></div> New LaTeX Project</div>
+        <div class="new-dropdown-item" data-nav="deep-research"><div class="dash-action-dot" style="background:var(--research-accent)"></div> New Deep Research</div>
+        <div class="new-dropdown-item"><div class="dash-action-dot" style="background:var(--review-accent)"></div> New Systematic Review</div>
+        <div class="new-dropdown-item"><div class="dash-action-dot" style="background:var(--stage-accent)"></div> New Presentation</div>
+        <div class="new-dropdown-item"><div class="dash-action-dot" style="background:var(--canvas-accent)"></div> New Illustration</div>
+      </div>
+      <div class="gdocs-section-label">Recent</div>
+      <div class="gdocs-list">
+        <div class="gdocs-item" data-nav="editor" data-type="draft" data-status="active"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-item-meta">3,240 words · 12 citations · Methods in progress</div></div><div class="gdocs-item-time">2h ago</div></div>
+        <div class="gdocs-item" data-nav="deep-research" data-type="research" data-status="completed"><div class="gdocs-item-dot" style="background:var(--research-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">SGLT2 mechanisms in HFpEF — multi-perspective synthesis</div><div class="gdocs-item-meta">Completed · 28 papers · 4 perspectives</div></div><div class="gdocs-item-time">6h ago</div></div>
+        <div class="gdocs-item" data-nav="systematic-review" data-type="review" data-status="active"><div class="gdocs-item-dot" style="background:var(--review-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-item-meta">Screening · 35 of 47 papers reviewed</div></div><div class="gdocs-item-time">1d ago</div></div>
+        <div class="gdocs-item" data-type="presentation" data-status="active"><div class="gdocs-item-dot" style="background:var(--stage-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">NEJM Submission Results — Conference Talk</div><div class="gdocs-item-meta">18 slides · Defense prep not run</div></div><div class="gdocs-item-time">3d ago</div></div>
+        <div class="gdocs-item" data-type="research" data-status="completed"><div class="gdocs-item-dot" style="background:var(--research-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Oxidative stress pathways in SGLT2i cardioprotection</div><div class="gdocs-item-meta">Completed · 19 papers · 3 perspectives</div></div><div class="gdocs-item-time">4d ago</div></div>
+        <div class="gdocs-item" data-type="draft" data-status="active"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-item-meta">890 words · 4 citations · Final review</div></div><div class="gdocs-item-time">5d ago</div></div>
+        <div class="gdocs-item" data-type="draft" data-status="completed"><div class="gdocs-item-dot" style="background:var(--latex-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Cardiac MRI Protocol — Supplementary Methods</div><div class="gdocs-item-meta">LaTeX · 2 files · Last compiled successfully</div></div><div class="gdocs-item-time">1w ago</div></div>
+        <div class="gdocs-item" data-type="presentation" data-status="active"><div class="gdocs-item-dot" style="background:var(--canvas-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">SGLT2 Mechanism Pathway — Figure 2</div><div class="gdocs-item-meta">Illustration · SVG · 1200×800</div></div><div class="gdocs-item-time">1w ago</div></div>
+        <div class="gdocs-item" data-type="review" data-status="completed"><div class="gdocs-item-dot" style="background:var(--review-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">GLP-1 Agonists in Obesity — Systematic Review</div><div class="gdocs-item-meta">Completed · 62 papers · Published in Lancet</div></div><div class="gdocs-item-time">3w ago</div></div>
+      </div>
+      <div class="gdocs-grid" style="display:none">
+        <div class="gdocs-card" data-nav="editor" data-type="draft" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:88%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:72%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:60%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Impact of SGLT2 Inhibitors on Cardiac...</div></div><div class="gdocs-card-meta">3,240 words · 12 citations · 2h ago</div></div></div>
+        <div class="gdocs-card" data-nav="deep-research" data-type="research" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">SGLT2 mechanisms in HFpEF — multi-perspective synthesis</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:80%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:65%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:92%"></div><div class="gdocs-card-preview-line" style="width:45%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--research-accent)"></div><div class="gdocs-card-title">SGLT2 mechanisms in HFpEF</div></div><div class="gdocs-card-meta">Completed · 28 papers · 6h ago</div></div></div>
+        <div class="gdocs-card" data-nav="systematic-review" data-type="review" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:75%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:55%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--review-accent)"></div><div class="gdocs-card-title">AI Diagnostics in Radiology</div></div><div class="gdocs-card-meta">Screening · 35 of 47 papers · 1d ago</div></div></div>
+        <div class="gdocs-card" data-type="presentation" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">NEJM Submission Results — Conference Talk</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:70%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:40%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--stage-accent)"></div><div class="gdocs-card-title">NEJM Submission Results</div></div><div class="gdocs-card-meta">18 slides · 3d ago</div></div></div>
+        <div class="gdocs-card" data-type="research" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Oxidative stress pathways in SGLT2i cardioprotection</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:88%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:78%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:50%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--research-accent)"></div><div class="gdocs-card-title">Oxidative stress pathways</div></div><div class="gdocs-card-meta">Completed · 19 papers · 4d ago</div></div></div>
+        <div class="gdocs-card" data-type="draft" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:92%"></div><div class="gdocs-card-preview-line" style="width:68%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:80%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Letter to Editor: Martinez-Rios</div></div><div class="gdocs-card-meta">890 words · 4 citations · 5d ago</div></div></div>
+        <div class="gdocs-card" data-type="draft" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Cardiac MRI Protocol — Supplementary Methods</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:72%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:48%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--latex-accent)"></div><div class="gdocs-card-title">Cardiac MRI Protocol</div></div><div class="gdocs-card-meta">LaTeX · 2 files · 1w ago</div></div></div>
+        <div class="gdocs-card" data-type="presentation" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">SGLT2 Mechanism Pathway — Figure 2</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:60%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:45%"></div><div class="gdocs-card-preview-line" style="width:80%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--canvas-accent)"></div><div class="gdocs-card-title">SGLT2 Mechanism Pathway</div></div><div class="gdocs-card-meta">Illustration · SVG · 1w ago</div></div></div>
+        <div class="gdocs-card" data-type="review" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">GLP-1 Agonists in Obesity — Systematic Review</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:82%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:65%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--review-accent)"></div><div class="gdocs-card-title">GLP-1 Agonists in Obesity</div></div><div class="gdocs-card-meta">Completed · 62 papers · 3w ago</div></div></div>
+      </div>
+    </div></div>
+
+    <!-- EDITOR -->
+    <div class="view" id="view-editor"><div class="editor-clean">
+      <div class="editor-toolbar-clean">
+        <div class="editor-toolbar-left"><input class="editor-title-clean" value="Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF" readonly><div class="editor-save-status">Saved 2 min ago</div></div>
+        <div class="editor-toolbar-right">
+          <div class="editor-tb-btn" id="citeBtn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 3h4v5H3zM9 3h4v5H9zM3 10h4v3M9 10h4v3"/></svg> Cite <span class="editor-tb-badge">12</span></div>
+          <div class="editor-tb-btn audit-btn" id="shieldBtn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 1.5L2 4v4.5c0 3.5 2.5 5.5 6 7 3.5-1.5 6-3.5 6-7V4L8 1.5z"/></svg> Audit</div>
+          <div class="editor-tb-sep"></div>
+          <div class="editor-tb-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 12l8-8M4 4h8v8"/></svg> Export</div>
+        </div>
+      </div>
+      <div class="editor-writing-surface"><div class="editor-writing-content">
+        <h1>Impact of SGLT2 Inhibitors on Cardiac Remodeling in Heart Failure with Preserved Ejection Fraction</h1>
+        <div class="doc-meta">Journal of Cardiac Failure · Original Article · Draft</div>
+        <h2>Introduction</h2>
+        <p>Heart failure with preserved ejection fraction (HFpEF) represents approximately half of all heart failure cases and is associated with significant morbidity and mortality <span class="cite">[Chen et al., 2023]</span>. Unlike heart failure with reduced ejection fraction (HFrEF), effective pharmacological treatments for HFpEF have remained elusive until recently.</p>
+        <p>The emergence of sodium-glucose cotransporter 2 (SGLT2) inhibitors has transformed the therapeutic landscape. The landmark EMPEROR-Preserved trial demonstrated that empagliflozin reduced the combined risk of cardiovascular death or hospitalization for heart failure by 21% <span class="cite">[Anker et al., 2021]</span>, while the DELIVER trial showed similar benefits with dapagliflozin <span class="cite">[Solomon et al., 2022]</span>.</p>
+        <p>However, the mechanisms underlying the cardioprotective effects of SGLT2 inhibitors in HFpEF remain incompletely understood. Proposed mechanisms include improvements in myocardial energetics, reduction in interstitial fibrosis, attenuation of oxidative stress, and favorable effects on cardiac loading conditions <span class="cite">[Verma et al., 2023]</span>.</p>
+        <h2>Methods</h2>
+        <p>We conducted a prospective, single-center cohort study of patients diagnosed with HFpEF (ejection fraction ≥ 50%) who were initiated on SGLT2 inhibitor therapy between January 2022 and December 2024. Cardiac magnetic resonance imaging was performed at baseline and at 12 months to assess changes in myocardial structure and function.</p>
+        <p>Primary inclusion criteria were: (1) confirmed HFpEF diagnosis with LVEF ≥ 50% on echocardiography within 6 months, (2) NYHA functional class II-III, (3) elevated NT-proBNP (>125 pg/mL), and (4) initiation of either empagliflozin 10mg or dapagliflozin 10mg daily.</p>
+        <h2>Statistical Analysis</h2>
+        <p>Continuous variables were compared using paired t-tests or Wilcoxon signed-rank tests as appropriate. Changes in CMR parameters were analyzed using mixed-effects models with time as a fixed effect and patient as a random effect. A two-sided p-value <0.05 was considered statistically significant.</p>
+      </div></div>
+    </div></div>
+
+    <!-- PLACEHOLDER VIEWS -->
+    <div class="view" id="view-deep-research"><div class="placeholder-view"><h2>Deep Research</h2><p>Multi-perspective AI research synthesis across PubMed, Semantic Scholar, OpenAlex, and ClinicalTrials.gov.</p></div></div>
+    <div class="view" id="view-discover"><div class="placeholder-view"><h2>Discover</h2><p>Search 282M+ papers. Buddy writes a one-line relevance note for each result.</p></div></div>
+    <div class="view" id="view-reading-room"><div class="placeholder-view"><h2>Reading Room</h2><p>Upload sources, chat with Buddy across all of them. Every insight traceable to a page.</p></div></div>
+    <div class="view" id="view-pulse"><div class="placeholder-view"><h2>Pulse</h2><p>Your research feeds. New papers, daily digest, keyboard-navigable.</p></div></div>
+    <div class="view" id="view-library"><div class="placeholder-view"><h2>Library</h2><p>Your paper collection. Instant search, smart views, citation export.</p></div></div>
+    <div class="view" id="view-latex"><div class="ltx">
+      <!-- Toolbar — ultra clean -->
+      <div class="ltx-toolbar">
+        <div class="ltx-toolbar-left">
+          <input class="ltx-title" value="Cardiac MRI Protocol — Supplementary Methods" readonly>
+          <span class="ltx-save">Saved 3m ago</span>
+        </div>
+        <div class="ltx-toolbar-right">
+          <button class="ltx-btn compile" id="ltxCompile"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> Preview PDF</button>
+          <div class="ltx-more-wrap">
+            <div class="ltx-btn" id="ltxMoreBtn"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="13" cy="8" r="1.2" fill="currentColor"/></svg></div>
+            <div class="ltx-dropdown" id="ltxDropdown">
+              <div class="ltx-dd-section">Tools</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 2h4.5l1.5 2H14v10H2z"/></svg> Files <span class="ltx-dd-shortcut">⌘B</span></div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 3h4v5H3zM9 3h4v5H9zM3 10h4v3M9 10h4v3"/></svg> Cite <span class="ltx-dd-shortcut">⌘⇧C</span></div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1"/><circle cx="6" cy="7" r="1.5"/><path d="M2 11l3-2.5 3 2 4-3.5"/></svg> Figures</div>
+              <div class="ltx-dd-sep"></div>
+              <div class="ltx-dd-section">Layout</div>
+              <div class="ltx-dd-item" data-ltxlayout="source"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="2" width="13" height="12" rx="1.5"/><path d="M5 6l-2 2.5L5 11" opacity="0.5"/><path d="M11 6l2 2.5L11 11" opacity="0.5"/></svg> Source only</div>
+              <div class="ltx-dd-item" data-ltxlayout="split"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="2" width="13" height="12" rx="1.5"/><path d="M8 2v12"/></svg> Split view</div>
+              <div class="ltx-dd-item" data-ltxlayout="preview"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="2" width="13" height="12" rx="1.5"/><path d="M5 7h6M5 9.5h4" opacity="0.5"/></svg> Preview only</div>
+              <div class="ltx-dd-sep"></div>
+              <div class="ltx-dd-section">Collaboration</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 3h12v8H6l-3 3v-3H2z"/></svg> Comments</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 8h5M9 8h5M5 5l3 3-3 3M11 5l-3 3 3 3" opacity="0.6"/></svg> Track changes</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="6" cy="5" r="2.5"/><path d="M1 13c0-2.5 2-4.5 5-4.5s5 2 5 4.5"/></svg> Collaborators</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2.5 1.5"/></svg> Version history <span class="ltx-dd-shortcut">⌘⇧H</span></div>
+              <div class="ltx-dd-sep"></div>
+              <div class="ltx-dd-section">Export</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 12h10"/></svg> Export PDF</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 12h10"/></svg> Export .tex</div>
+              <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 12h10"/></svg> Export .zip <span class="ltx-dd-shortcut">All files</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ltx-split">
+        <!-- Files panel (hidden, slides in) -->
+        <div class="ltx-files" id="ltxFiles">
+          <div class="ltx-files-head">
+            <span class="ltx-files-title">Files</span>
+            <div class="ltx-files-close" id="ltxFilesClose"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+          </div>
+          <div class="ltx-files-list">
+            <div class="ltx-fi act"><svg fill="none" stroke="#34D399" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> main.tex <span class="main-badge">main</span></div>
+            <div class="ltx-fi"><svg fill="none" stroke="#F59E0B" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> references.bib</div>
+            <div class="ltx-fi"><svg fill="none" stroke="#34D399" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> methods.tex</div>
+            <div class="ltx-fi"><svg fill="none" stroke="#34D399" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> results.tex</div>
+            <div class="ltx-fi"><svg fill="none" stroke="#38BDF8" stroke-width="1.5" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M2 11l3-2.5 3 2 4-3.5"/></svg> figures/fig1.pdf</div>
+            <div class="ltx-fi"><svg fill="none" stroke="#38BDF8" stroke-width="1.5" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M2 11l3-2.5 3 2 4-3.5"/></svg> figures/fig2.png</div>
+            <div class="ltx-fi"><svg fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg> custom.sty</div>
+          </div>
+          <div class="ltx-outline-sec">
+            <div class="ltx-outline-title">Outline</div>
+            <div class="ltx-oi">1. Introduction</div>
+            <div class="ltx-oi">2. Methods</div>
+            <div class="ltx-oi sub">2.1 Study Design</div>
+            <div class="ltx-oi sub">2.2 MRI Protocol</div>
+            <div class="ltx-oi sub">2.3 Image Analysis</div>
+            <div class="ltx-oi">3. Results</div>
+            <div class="ltx-oi">4. Discussion</div>
+          </div>
+        </div>
+
+        <!-- Source pane -->
+        <div class="ltx-source" id="ltxSource">
+          <div class="ltx-pane-label">Source</div>
+          <div class="ltx-code-wrap">
+            <div class="ltx-code"><span class="ln"> 1</span><span class="cm">\documentclass</span><span class="br">{</span>article<span class="br">}</span>
+<span class="ln"> 2</span><span class="cm">\usepackage</span><span class="br">{</span>amsmath, amssymb<span class="br">}</span>
+<span class="ln"> 3</span><span class="cm">\usepackage</span><span class="br">{</span>graphicx<span class="br">}</span>
+<span class="ln"> 4</span><span class="cm">\usepackage</span><span class="br">{</span>hyperref<span class="br">}</span>
+<span class="ln"> 5</span><span class="cm">\usepackage</span><span class="br">{</span>natbib<span class="br">}</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="cm">\title</span><span class="br">{</span>Cardiac MRI Protocol for SGLT2 Inhibitor\\Assessment in HFpEF<span class="br">}</span>
+<span class="ln"> 8</span><span class="cm">\author</span><span class="br">{</span>S. Singh<span class="cm">\textsuperscript</span><span class="br">{</span>1<span class="br">}</span>, A. Kumar<span class="cm">\textsuperscript</span><span class="br">{</span>2<span class="br">}</span><span class="br">}</span>
+<span class="ln"> 9</span><span class="cm">\date</span><span class="br">{</span>March 2026<span class="br">}</span>
+<span class="ln">10</span>
+<span class="ln">11</span><span class="ev">\begin</span><span class="br">{</span>document<span class="br">}</span>
+<span class="ln">12</span><span class="cm">\maketitle</span>
+<span class="ln">13</span>
+<span class="ln">14</span><span class="ev">\begin</span><span class="br">{</span>abstract<span class="br">}</span>
+<span class="ln">15</span>This supplementary document details the cardiac magnetic
+<span class="ln">16</span>resonance imaging protocol used to assess myocardial
+<span class="ln">17</span>structural and functional changes in patients with heart
+<span class="ln">18</span>failure with preserved ejection fraction (HFpEF) treated
+<span class="ln">19</span>with SGLT2 inhibitors. We describe acquisition parameters,
+<span class="ln">20</span>post-processing methods, and quality assurance procedures.
+<span class="ln">21</span><span class="ev">\end</span><span class="br">{</span>abstract<span class="br">}</span>
+<span class="ln">22</span>
+<span class="ln">23</span><span class="cm">\section</span><span class="br">{</span>Introduction<span class="br">}</span>
+<span class="ln">24</span>
+<span class="ln">25</span>Cardiac magnetic resonance (CMR) imaging is the gold
+<span class="ln">26</span>standard for non-invasive assessment of myocardial
+<span class="ln">27</span>structure and function <span class="cm">\citep</span><span class="br">{</span>kramer2020<span class="br">}</span>. Recent
+<span class="ln">28</span>advances in quantitative mapping techniques have enabled
+<span class="ln">29</span>detailed tissue characterization, including measurement
+<span class="ln">30</span>of native T1, T2, and extracellular volume (ECV)
+<span class="ln">31</span>fraction <span class="cm">\citep</span><span class="br">{</span>messroghli2017<span class="br">}</span>.
+<span class="ln">32</span>
+<span class="ln">33</span><span class="cm">\section</span><span class="br">{</span>Methods<span class="br">}</span>
+<span class="ln">34</span>
+<span class="ln">35</span><span class="cm">\subsection</span><span class="br">{</span>Study Design<span class="br">}</span>
+<span class="ln">36</span>This was a prospective, single-center cohort study
+<span class="ln">37</span>approved by the institutional review board (IRB
+<span class="ln">38</span>\#2022-0847). Written informed consent was obtained
+<span class="ln">39</span>from all participants.
+<span class="ln">40</span>
+<span class="ln">41</span><span class="cm">\subsection</span><span class="br">{</span>MRI Protocol<span class="br">}</span>
+<span class="ln">42</span>All examinations were performed on a 3T scanner
+<span class="ln">43</span>(MAGNETOM Prisma, Siemens Healthineers) using a
+<span class="ln">44</span>32-channel cardiac coil. The protocol included:
+<span class="ln">45</span>
+<span class="ln">46</span><span class="ev">\begin</span><span class="br">{</span>equation<span class="br">}</span>
+<span class="ln">47</span>  <span class="mt">ECV = (1 - Hct) \cdot \frac{\Delta R1_{myo}}{\Delta R1_{blood}}</span>
+<span class="ln">48</span><span class="ev">\end</span><span class="br">{</span>equation<span class="br">}</span>
+<span class="ln">49</span>
+<span class="ln">50</span>where <span class="mt">$Hct$</span> is the hematocrit and <span class="mt">$\Delta R1$</span> represents
+<span class="ln">51</span>the change in longitudinal relaxation rate.
+<span class="ln">52</span>
+<span class="ln">53</span><span class="co">% TODO: Add table of acquisition parameters</span></div>
+          </div>
+          <div class="ltx-hint">Type / for commands · ⌘K for AI edit</div>
+          <!-- Cite panel (overlays inside source pane) -->
+          <div class="ltx-cite" id="ltxCite">
+            <div class="ltx-cite-head">
+              <span class="ltx-cite-title">Insert Citation</span>
+              <div class="ltx-cite-close" id="ltxCiteClose"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+            </div>
+            <input class="ltx-cite-search" placeholder="Search papers, DOI, or title..." autofocus>
+            <div class="ltx-cite-results">
+              <div class="ltx-cite-card">
+                <div class="ltx-cite-card-title">Standardized myocardial segmentation and nomenclature for cardiac imaging</div>
+                <div class="ltx-cite-card-meta">Kramer et al. · Circulation · 2020 · Cited 842</div>
+                <div class="ltx-cite-card-actions"><div class="ltx-cite-card-btn primary">Cite</div><div class="ltx-cite-card-btn">Save to Library</div></div>
+              </div>
+              <div class="ltx-cite-card">
+                <div class="ltx-cite-card-title">Clinical recommendations for cardiovascular magnetic resonance mapping</div>
+                <div class="ltx-cite-card-meta">Messroghli et al. · JCMR · 2017 · Cited 1,204</div>
+                <div class="ltx-cite-card-actions"><div class="ltx-cite-card-btn primary">Cite</div><div class="ltx-cite-card-btn">Save to Library</div></div>
+              </div>
+              <div class="ltx-cite-card">
+                <div class="ltx-cite-card-title">SGLT2 inhibitors in heart failure with preserved ejection fraction: a systematic review</div>
+                <div class="ltx-cite-card-meta">Verma et al. · Eur Heart J · 2023 · Cited 389</div>
+                <div class="ltx-cite-card-actions"><div class="ltx-cite-card-btn primary">Cite</div><div class="ltx-cite-card-btn">Save to Library</div></div>
+              </div>
+              <div class="ltx-cite-card">
+                <div class="ltx-cite-card-title">Empagliflozin in heart failure with a preserved ejection fraction</div>
+                <div class="ltx-cite-card-meta">Anker et al. · NEJM · 2021 · Cited 2,156</div>
+                <div class="ltx-cite-card-actions"><div class="ltx-cite-card-btn primary">Cite</div><div class="ltx-cite-card-btn">Save to Library</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resize handle -->
+        <div class="ltx-resize" id="ltxResize"></div>
+
+        <!-- Preview -->
+        <div class="ltx-preview" id="ltxPreview" style="position:relative">
+          <div class="ltx-pane-label" style="left:auto;right:14px">Live Preview</div>
+          <div class="ltx-preview-inner">
+            <h1>Cardiac MRI Protocol for SGLT2 Inhibitor Assessment in HFpEF</h1>
+            <div class="pa">S. Singh<sup>1</sup>, A. Kumar<sup>2</sup></div>
+            <div class="pd">March 2026</div>
+            <div class="pab"><div class="pab-t">Abstract</div>This supplementary document details the cardiac magnetic resonance imaging protocol used to assess myocardial structural and functional changes in patients with heart failure with preserved ejection fraction (HFpEF) treated with SGLT2 inhibitors. We describe acquisition parameters, post-processing methods, and quality assurance procedures.</div>
+            <h2>1 &nbsp; Introduction</h2>
+            <p>Cardiac magnetic resonance (CMR) imaging is the gold standard for non-invasive assessment of myocardial structure and function [Kramer et al., 2020]. Recent advances in quantitative mapping techniques have enabled detailed tissue characterization, including measurement of native T1, T2, and extracellular volume (ECV) fraction [Messroghli et al., 2017].</p>
+            <h2>2 &nbsp; Methods</h2>
+            <h3>2.1 &nbsp; Study Design</h3>
+            <p>This was a prospective, single-center cohort study approved by the institutional review board (IRB #2022-0847). Written informed consent was obtained from all participants.</p>
+            <h3>2.2 &nbsp; MRI Protocol</h3>
+            <p>All examinations were performed on a 3T scanner (MAGNETOM Prisma, Siemens Healthineers) using a 32-channel cardiac coil. The protocol included:</p>
+            <div class="meq"><em>ECV = (1 − Hct) · ΔR1<sub>myo</sub> / ΔR1<sub>blood</sub></em></div>
+            <p>where <em>Hct</em> is the hematocrit and <em>ΔR1</em> represents the change in longitudinal relaxation rate.</p>
+          </div>
+
+          <!-- Version History panel -->
+          <div class="ltx-rpanel" id="ltxVersions">
+            <div class="ltx-rpanel-head"><span class="ltx-rpanel-title">Version History</span><div class="ltx-rpanel-close" data-closepanel="ltxVersions"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+            <div class="ltx-rpanel-body">
+              <div class="ltx-ver"><div class="ltx-ver-info"><div class="ltx-ver-label">Current version</div><div class="ltx-ver-time">Today, 2:34 PM</div></div></div>
+              <div class="ltx-ver"><div class="ltx-ver-info"><div class="ltx-ver-label">Added MRI protocol section</div><div class="ltx-ver-time">Today, 11:20 AM</div></div><div class="ltx-ver-btn">Restore</div></div>
+              <div class="ltx-ver"><div class="ltx-ver-info"><div class="ltx-ver-label">Initial draft with abstract</div><div class="ltx-ver-time">Yesterday, 4:15 PM</div></div><div class="ltx-ver-btn">Restore</div></div>
+              <div class="ltx-ver"><div class="ltx-ver-info"><div class="ltx-ver-label">Template setup</div><div class="ltx-ver-time">Mar 17, 9:00 AM</div></div><div class="ltx-ver-btn">Restore</div></div>
+            </div>
+          </div>
+
+          <!-- Comments panel -->
+          <div class="ltx-rpanel" id="ltxComments">
+            <div class="ltx-rpanel-head"><span class="ltx-rpanel-title">Comments</span><div class="ltx-rpanel-close" data-closepanel="ltxComments"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+            <div class="ltx-rpanel-body">
+              <div class="ltx-comment">
+                <div class="ltx-comment-head"><div class="ltx-comment-avatar" style="background:#6D28D9">AK</div><div class="ltx-comment-author">A. Kumar</div><div class="ltx-comment-time">2h ago</div></div>
+                <div class="ltx-comment-text">Should we add the acquisition parameters table here? I have the data from the scanner logs.</div>
+                <div class="ltx-comment-line">Line 53 · main.tex</div>
+                <div class="ltx-comment-actions"><div class="ltx-comment-btn">Reply</div><div class="ltx-comment-btn">Resolve</div></div>
+              </div>
+              <div class="ltx-comment">
+                <div class="ltx-comment-head"><div class="ltx-comment-avatar" style="background:#0891B2">SS</div><div class="ltx-comment-author">S. Singh</div><div class="ltx-comment-time">5h ago</div></div>
+                <div class="ltx-comment-text">Let's cite the SCMR 2020 guidelines for the T1 mapping protocol. Kramer et al. should cover it.</div>
+                <div class="ltx-comment-line">Line 27 · main.tex</div>
+                <div class="ltx-comment-actions"><div class="ltx-comment-btn">Reply</div><div class="ltx-comment-btn">Resolve</div></div>
+              </div>
+              <div class="ltx-comment">
+                <div class="ltx-comment-head"><div class="ltx-comment-avatar" style="background:#059669">RJ</div><div class="ltx-comment-author">R. Joshi</div><div class="ltx-comment-time">1d ago</div></div>
+                <div class="ltx-comment-text">The ECV formula looks correct. Double-check the hematocrit units — should be fraction, not percentage.</div>
+                <div class="ltx-comment-line">Line 47 · main.tex</div>
+                <div class="ltx-comment-actions"><div class="ltx-comment-btn">Reply</div><div class="ltx-comment-btn">Resolve</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Track Changes panel -->
+          <div class="ltx-rpanel" id="ltxChanges">
+            <div class="ltx-rpanel-head"><span class="ltx-rpanel-title">Track Changes</span><div class="ltx-rpanel-close" data-closepanel="ltxChanges"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+            <div class="ltx-rpanel-body">
+              <div class="ltx-change">
+                <div class="ltx-change-head"><div class="ltx-change-dot" style="background:#6D28D9"></div><div class="ltx-change-author">A. Kumar</div><span class="ltx-change-pending">Pending</span><div class="ltx-change-time">1h ago</div></div>
+                <div class="ltx-change-diff"><span class="ltx-change-del">32-channel</span> <span class="ltx-change-ins">64-channel</span> cardiac coil</div>
+                <div class="ltx-change-actions"><div class="ltx-change-accept">Accept</div><div class="ltx-change-reject">Reject</div></div>
+              </div>
+              <div class="ltx-change">
+                <div class="ltx-change-head"><div class="ltx-change-dot" style="background:#059669"></div><div class="ltx-change-author">R. Joshi</div><span class="ltx-change-pending">Pending</span><div class="ltx-change-time">3h ago</div></div>
+                <div class="ltx-change-diff"><span class="ltx-change-ins">Written informed consent was obtained from all participants prior to enrollment.</span></div>
+                <div class="ltx-change-actions"><div class="ltx-change-accept">Accept</div><div class="ltx-change-reject">Reject</div></div>
+              </div>
+              <div class="ltx-change">
+                <div class="ltx-change-head"><div class="ltx-change-dot" style="background:#6D28D9"></div><div class="ltx-change-author">A. Kumar</div><span class="ltx-change-pending">Pending</span><div class="ltx-change-time">5h ago</div></div>
+                <div class="ltx-change-diff"><span class="ltx-change-del">prospective, single-center</span> <span class="ltx-change-ins">prospective, multi-center</span> cohort study</div>
+                <div class="ltx-change-actions"><div class="ltx-change-accept">Accept</div><div class="ltx-change-reject">Reject</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Figures panel -->
+          <div class="ltx-rpanel" id="ltxFigures">
+            <div class="ltx-rpanel-head"><span class="ltx-rpanel-title">Figures</span><div class="ltx-rpanel-close" data-closepanel="ltxFigures"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+            <div class="ltx-rpanel-body">
+              <div class="ltx-fig-grid">
+                <div class="ltx-fig-card"><div class="ltx-fig-thumb">fig1.pdf</div><div class="ltx-fig-name">figures/fig1.pdf</div><div class="ltx-fig-actions"><div class="ltx-fig-btn">Copy path</div><div class="ltx-fig-btn">Insert</div></div></div>
+                <div class="ltx-fig-card"><div class="ltx-fig-thumb">fig2.png</div><div class="ltx-fig-name">figures/fig2.png</div><div class="ltx-fig-actions"><div class="ltx-fig-btn">Copy path</div><div class="ltx-fig-btn">Insert</div></div></div>
+                <div class="ltx-fig-upload">Drop files here or click to upload<br><span style="font-size:10px;color:var(--text-tertiary)">PNG, JPG, PDF · Max 10MB</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Collaboration panel -->
+          <div class="ltx-rpanel" id="ltxCollab">
+            <div class="ltx-rpanel-head"><span class="ltx-rpanel-title">Collaboration</span><div class="ltx-rpanel-close" data-closepanel="ltxCollab"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+            <div class="ltx-rpanel-body">
+              <div class="ltx-collab-users">
+                <div class="ltx-collab-user"><div class="ltx-collab-avatar" style="background:#0891B2">SS</div><div><div class="ltx-collab-name">S. Singh (you)</div><div class="ltx-collab-status">Editing main.tex</div></div><div class="ltx-collab-dot"></div></div>
+                <div class="ltx-collab-user"><div class="ltx-collab-avatar" style="background:#6D28D9">AK</div><div><div class="ltx-collab-name">A. Kumar</div><div class="ltx-collab-status">Viewing · Line 47</div></div><div class="ltx-collab-dot"></div></div>
+                <div class="ltx-collab-user"><div class="ltx-collab-avatar" style="background:#059669">RJ</div><div><div class="ltx-collab-name">R. Joshi</div><div class="ltx-collab-status">Last seen 2h ago</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ltx-toast" id="ltxToast"></div>
+    </div></div>
+    <div class="view" id="view-canvas"><div class="placeholder-view"><h2>Canvas</h2><p>Scientific figures and diagrams. Buddy generates, you refine. Journal-ready export.</p></div></div>
+    <div class="view" id="view-poster"><div class="placeholder-view"><h2>Poster</h2><p>Academic posters for conferences. AI-generated layouts from your research.</p></div></div>
+    <div class="view" id="view-stage"><div class="placeholder-view"><h2>Stage</h2><p>Presentations from your research. Defense prep, conference talks, journal clubs.</p></div></div>
+    <div class="view" id="view-systematic-review"><div class="placeholder-view"><h2>Systematic Review</h2><p>PRISMA 2020 workflow. Triple-agent screening, RoB assessment, meta-analysis.</p></div></div>
+    <div class="view" id="view-audit"><div class="placeholder-view"><h2>Audit — Integrity Check</h2><p>Plagiarism detection, AI content audit, citation verification.</p></div></div>
+  </main>
+
+  <!-- BUDDY RESIZE HANDLE -->
+  <div class="resize-handle" id="buddyResizeHandle" style="display:none;"></div>
+
+  <!-- BUDDY PANEL (inside flex, pushes content) -->
+  <div class="buddy-panel-dock" id="buddyPanel">
+    <div class="buddy-header">
+      <div class="buddy-header-left">
+        <div class="buddy-avatar"><img src="buddy-icon.png" alt="Buddy"></div>
+        <div class="buddy-name">Buddy</div>
+      </div>
+      <div class="buddy-header-right">
+        <div class="buddy-icon-btn" id="buddyGearBtn" title="Settings"><svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.58 1.69-.98l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg></div>
+        <div class="buddy-icon-btn close-btn" id="buddyCloseBtn" title="Close"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      </div>
+      <!-- Gear popover -->
+      <div class="buddy-gear-popover" id="buddyGearPopover" style="position:absolute;right:16px;top:50px;z-index:60;">
+        <div class="gear-section-label">AI Intensity</div>
+        <div class="gear-option" data-intensity="focus"><div class="gear-radio"></div><div class="gear-option-text"><div class="gear-option-name">Focus</div><div class="gear-option-desc">Responds only when asked</div></div></div>
+        <div class="gear-option" data-intensity="collaborate"><div class="gear-radio active"></div><div class="gear-option-text"><div class="gear-option-name">Collaborate</div><div class="gear-option-desc">Balanced suggestions and feedback</div></div></div>
+        <div class="gear-option" data-intensity="accelerate"><div class="gear-radio"></div><div class="gear-option-text"><div class="gear-option-name">Accelerate</div><div class="gear-option-desc">Proactive rewrites and comprehensive feedback</div></div></div>
+      </div>
+    </div>
+    <!-- Mode tabs — bold, full-width, Superhuman-style -->
+    <div class="buddy-mode-tabs">
+      <button class="buddy-mode-tab active" data-bmode="default" id="buddyDefaultTab"><div class="tab-dot"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10v7H6.5L3 14V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div> Chat</button>
+      <button class="buddy-mode-tab" data-bmode="draft" id="buddyDraftBtn"><div class="tab-dot"><svg viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-8.5 8.5H2.5v-3L11 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div> Draft</button>
+      <button class="buddy-mode-tab" data-bmode="learn" id="buddyLearnBtn"><div class="tab-dot"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2.5C6.5 2.5 5 4 5 6c0 1.5 1 2.2 1.5 2.8.4.5.5 1 .5 1.7h2c0-.7.1-1.2.5-1.7C10 8.2 11 7.5 11 6c0-2-1.5-3.5-3-3.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 12.5h3M7 14h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div> Learn</button>
+    </div>
+    <div class="buddy-messages" id="buddyMessages">
+    </div>
+    <div class="buddy-input-area">
+      <input type="text" placeholder="Ask Buddy anything..." id="buddyInput">
+      <button class="buddy-send-btn"><div class="svg-wrapper-1"><div class="svg-wrapper"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path></svg></div></div><span>Send</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- BUDDY FAB -->
+<div class="buddy-fab" id="buddyFab"><img src="buddy-icon.png" alt="Buddy"></div>
+
+<!-- CMD PALETTE -->
+<div class="cmd-overlay" id="cmdOverlay"><div class="cmd-palette">
+  <div class="cmd-input-wrap"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input type="text" placeholder="Search or jump to..." id="cmdInput"></div>
+  <div class="cmd-results">
+    <div class="cmd-group-label">Quick Actions</div>
+    <div class="cmd-item" data-nav="editor"><div class="cmd-item-dot" style="background:var(--editor-accent)"></div><div class="cmd-item-label">New Draft</div><div class="cmd-item-hint">&#8984;N</div></div>
+    <div class="cmd-item" data-nav="deep-research"><div class="cmd-item-dot" style="background:var(--research-accent)"></div><div class="cmd-item-label">Start Deep Research</div><div class="cmd-item-hint">&#8984;R</div></div>
+    <div class="cmd-item" data-nav="discover"><div class="cmd-item-dot" style="background:var(--discover-accent)"></div><div class="cmd-item-label">Discover Papers</div><div class="cmd-item-hint">&#8984;L</div></div>
+    <div class="cmd-group-label">Recent</div>
+    <div class="cmd-item" data-nav="editor"><div class="cmd-item-dot" style="background:var(--editor-accent)"></div><div class="cmd-item-label">SGLT2 Inhibitors — Cardiac Remodeling</div><div class="cmd-item-hint">Draft</div></div>
+    <div class="cmd-item" data-nav="systematic-review"><div class="cmd-item-dot" style="background:var(--review-accent)"></div><div class="cmd-item-label">AI Diagnostics in Radiology</div><div class="cmd-item-hint">Review</div></div>
+  </div>
+</div></div>
+
+<script>
+const views = document.querySelectorAll('.view');
+const navItems = document.querySelectorAll('.nav-item[data-view]');
+const breadcrumb = document.getElementById('breadcrumb');
+const sidebar = document.getElementById('sidebar');
+const viewNames = { dashboard:'Projects', editor:'Draft', 'deep-research':'Deep Research', discover:'Discover', 'reading-room':'Reading Room', pulse:'Pulse', library:'Library', latex:'LaTeX', canvas:'Canvas', poster:'Poster', stage:'Stage', 'systematic-review':'Systematic Review', audit:'Audit' };
+
+function switchView(id) {
+  views.forEach(v => v.classList.remove('active'));
+  navItems.forEach(n => n.classList.remove('active'));
+  document.getElementById('view-'+id)?.classList.add('active');
+  document.querySelector(`[data-view="${id}"]`)?.classList.add('active');
+  breadcrumb.innerHTML = `<strong>${viewNames[id]||id}</strong>`;
+  if (id === 'editor' || id === 'latex') { sidebar.classList.add('hidden'); document.getElementById('sidebarResizeHandle').style.display='none'; }
+  // Buddy FAB is available everywhere — same Buddy, same universe
+}
+navItems.forEach(i => i.addEventListener('click', () => switchView(i.dataset.view)));
+document.querySelectorAll('[data-nav]').forEach(el => el.addEventListener('click', () => { switchView(el.dataset.nav); document.getElementById('cmdOverlay').classList.remove('open'); document.getElementById('newDropdown')?.classList.remove('open'); }));
+
+// Sidebar
+const sidebarResizeEl = document.getElementById('sidebarResizeHandle');
+document.getElementById('sidebarClose')?.addEventListener('click', () => { sidebar.classList.add('hidden'); sidebarResizeEl.style.display='none'; });
+document.getElementById('sidebarOpen')?.addEventListener('click', () => { const hidden = sidebar.classList.toggle('hidden'); sidebarResizeEl.style.display = hidden ? 'none' : 'block'; });
+
+// Cmd palette
+const cmdOverlay = document.getElementById('cmdOverlay');
+document.getElementById('cmdTrigger').addEventListener('click', () => { cmdOverlay.classList.add('open'); document.getElementById('cmdInput').focus(); });
+cmdOverlay.addEventListener('click', e => { if (e.target === cmdOverlay) cmdOverlay.classList.remove('open'); });
+document.addEventListener('keydown', e => {
+  if ((e.metaKey||e.ctrlKey) && e.key === 'k') { e.preventDefault(); cmdOverlay.classList.toggle('open'); if (cmdOverlay.classList.contains('open')) document.getElementById('cmdInput').focus(); }
+  if (e.key === 'Escape') { cmdOverlay.classList.remove('open'); }
+});
+
+// New dropdown
+document.getElementById('newProjectBtn')?.addEventListener('click', e => { e.stopPropagation(); document.getElementById('newDropdown').classList.toggle('open'); });
+document.addEventListener('click', () => document.getElementById('newDropdown')?.classList.remove('open'));
+
+// Dashboard filters
+let activeStatus = 'all', activeType = null, activeLayout = 'list';
+function applyFilters() {
+  const items = document.querySelectorAll('.gdocs-item, .gdocs-card');
+  items.forEach(i => { const ms = activeStatus==='all'||i.dataset.status===activeStatus; const mt = !activeType||i.dataset.type===activeType; i.classList.toggle('filtered',!(ms&&mt)); });
+}
+document.querySelectorAll('.status-filter').forEach(c => c.addEventListener('click', () => { document.querySelectorAll('.status-filter').forEach(x=>x.classList.remove('active')); c.classList.add('active'); activeStatus=c.dataset.status; applyFilters(); }));
+document.querySelectorAll('.type-filter').forEach(c => c.addEventListener('click', () => { if(c.classList.contains('active')){c.classList.remove('active');activeType=null;}else{document.querySelectorAll('.type-filter').forEach(x=>x.classList.remove('active'));c.classList.add('active');activeType=c.dataset.typeFilter;} applyFilters(); }));
+document.getElementById('projectSearch')?.addEventListener('input', e => { const q=e.target.value.toLowerCase(); document.querySelectorAll('.gdocs-item, .gdocs-card').forEach(i => { const t=(i.querySelector('.gdocs-item-title')||i.querySelector('.gdocs-card-title'))?.textContent.toLowerCase()||''; const m=(i.querySelector('.gdocs-item-meta')||i.querySelector('.gdocs-card-meta'))?.textContent.toLowerCase()||''; i.classList.toggle('filtered',q&&!t.includes(q)&&!m.includes(q)); }); });
+
+// Layout toggle (list/grid)
+document.querySelectorAll('.gdocs-layout-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.gdocs-layout-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeLayout = btn.dataset.layout;
+  const list = document.querySelector('.gdocs-list');
+  const grid = document.querySelector('.gdocs-grid');
+  const label = document.querySelector('.gdocs-section-label');
+  if (activeLayout === 'grid') { list.style.display='none'; grid.style.display='grid'; label.style.display='none'; }
+  else { list.style.display='flex'; grid.style.display='none'; label.style.display='block'; }
+  applyFilters();
+}));
+
+// Wire grid card clicks
+document.querySelectorAll('.gdocs-card[data-nav]').forEach(c => c.addEventListener('click', () => { const v=c.dataset.nav; if(v){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); document.querySelector(`.nav-item[data-view="${v}"]`)?.classList.add('active'); document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v)?.classList.add('active'); document.getElementById('breadcrumb').innerHTML='<strong>'+viewNames[v]+'</strong>'; if(v==='editor'||v==='latex'){document.querySelector('.sidebar')?.classList.add('hidden');}} }));
+
+// Buddy panel
+const buddyFab = document.getElementById('buddyFab');
+const buddyPanel = document.getElementById('buddyPanel');
+const buddyInput = document.getElementById('buddyInput');
+const buddyMessages = document.getElementById('buddyMessages');
+let currentMode = 'default';
+
+const buddyResizeEl = document.getElementById('buddyResizeHandle');
+buddyFab.addEventListener('click', () => { buddyPanel.classList.add('open'); buddyFab.classList.add('panel-open'); buddyResizeEl.style.display='block'; buddyInput?.focus(); });
+document.getElementById('buddyCloseBtn').addEventListener('click', () => { buddyPanel.classList.remove('open'); buddyFab.classList.remove('panel-open'); buddyResizeEl.style.display='none'; });
+
+// Mode toggles
+// Mode tabs — bold switching, no confirmation messages
+document.querySelectorAll('.buddy-mode-tab').forEach(tab => tab.addEventListener('click', function() {
+  document.querySelectorAll('.buddy-mode-tab').forEach(t => t.classList.remove('active'));
+  this.classList.add('active');
+  currentMode = this.dataset.bmode === 'default' ? 'default' : this.dataset.bmode;
+  const panel = document.getElementById('buddyPanel');
+  panel.classList.remove('mode-draft', 'mode-learn');
+  if (currentMode === 'draft') panel.classList.add('mode-draft');
+  if (currentMode === 'learn') panel.classList.add('mode-learn');
+}));
+
+// Gear popover
+document.getElementById('buddyGearBtn').addEventListener('click', e => { e.stopPropagation(); document.getElementById('buddyGearPopover').classList.toggle('open'); });
+document.addEventListener('click', () => document.getElementById('buddyGearPopover')?.classList.remove('open'));
+document.querySelectorAll('.gear-option').forEach(o => o.addEventListener('click', e => { e.stopPropagation(); document.querySelectorAll('.gear-radio').forEach(r=>r.classList.remove('active')); o.querySelector('.gear-radio').classList.add('active'); }));
+
+function addMsg(who, text) {
+  const d = document.createElement('div'); d.className = `buddy-msg ${who}`;
+  if(who==='buddy'){d.innerHTML=text;}else{d.textContent=text;}
+  buddyMessages.appendChild(d); buddyMessages.scrollTop=buddyMessages.scrollHeight;
+}
+buddyInput?.addEventListener('keydown', e => {
+  if(e.key==='Enter'&&buddyInput.value.trim()){const v=buddyInput.value.trim();addMsg('user',v);
+  if(v==='/draft')document.getElementById('buddyDraftBtn').click();else if(v==='/learn')document.getElementById('buddyLearnBtn').click();else if(v==='/default')document.getElementById('buddyDefaultTab')?.click();
+  else addMsg('buddy','I can help with that. In the full app, I\'d search your Library and research to give you a contextual answer.');
+  buddyInput.value='';}
+});
+
+// LaTeX workspace
+// More dropdown
+document.getElementById('ltxMoreBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('ltxDropdown').classList.toggle('open'); });
+document.addEventListener('click', () => document.getElementById('ltxDropdown')?.classList.remove('open'));
+
+// Toast helper
+function ltxToast(msg) {
+  const t = document.getElementById('ltxToast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Panel map: dropdown text → panel ID
+const ltxPanelMap = {
+  'files': 'ltxFiles',
+  'cite': 'ltxCite',
+  'version history': 'ltxVersions',
+  'comments': 'ltxComments',
+  'track changes': 'ltxChanges',
+  'figures': 'ltxFigures',
+  'collaborators': 'ltxCollab'
+};
+
+// Close all right panels
+function ltxCloseRPanels() { document.querySelectorAll('.ltx-rpanel').forEach(p => p.classList.remove('open')); }
+
+// Dropdown item actions
+document.querySelectorAll('.ltx-dd-item').forEach(item => item.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const text = item.textContent.trim();
+  document.getElementById('ltxDropdown').classList.remove('open');
+
+  // Layout switching
+  if (item.dataset.ltxlayout) {
+    const src = document.getElementById('ltxSource');
+    const prev = document.getElementById('ltxPreview');
+    const resize = document.getElementById('ltxResize');
+    const layout = item.dataset.ltxlayout;
+    if (layout === 'source') { src.classList.remove('hidden'); src.style.flex='1'; prev.classList.add('hidden'); resize.style.display='none'; }
+    else if (layout === 'preview') { src.classList.add('hidden'); prev.classList.remove('hidden'); prev.style.flex='1'; resize.style.display='none'; }
+    else { src.classList.remove('hidden'); prev.classList.remove('hidden'); src.style.flex=''; prev.style.flex=''; resize.style.display=''; }
+    return;
+  }
+
+  // Panel toggles — extract the label text without shortcut
+  const label = item.childNodes[1]?.textContent?.trim().toLowerCase() || text.toLowerCase().replace(/⌘.*/,'').trim();
+  const panelId = ltxPanelMap[label];
+  if (panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel.classList.contains('open')) { panel.classList.remove('open'); }
+    else {
+      // Close other right panels first, but keep Files/Cite independent
+      if (panelId !== 'ltxFiles' && panelId !== 'ltxCite') { ltxCloseRPanels(); document.getElementById('ltxCite').classList.remove('open'); }
+      panel.classList.toggle('open');
+    }
+    return;
+  }
+
+  // Export
+  if (label.startsWith('export')) { ltxToast('Downloading ' + label.replace('export ','') + '...'); return; }
+}));
+
+// Close buttons on all panels
+document.getElementById('ltxFilesClose')?.addEventListener('click', () => document.getElementById('ltxFiles').classList.remove('open'));
+document.getElementById('ltxCiteClose')?.addEventListener('click', () => document.getElementById('ltxCite').classList.remove('open'));
+document.querySelectorAll('.ltx-rpanel-close').forEach(btn => btn.addEventListener('click', () => {
+  const id = btn.dataset.closepanel;
+  if (id) document.getElementById(id)?.classList.remove('open');
+}));
+
+// Cite card actions
+document.querySelectorAll('.ltx-cite-card-btn.primary').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); ltxToast('\\cite{} inserted at cursor'); }));
+document.querySelectorAll('.ltx-cite-card-btn:not(.primary)').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); ltxToast('Saved to Library'); }));
+
+// Track changes accept/reject
+document.querySelectorAll('.ltx-change-accept').forEach(btn => btn.addEventListener('click', () => { btn.closest('.ltx-change').style.opacity='0.4'; ltxToast('Change accepted'); }));
+document.querySelectorAll('.ltx-change-reject').forEach(btn => btn.addEventListener('click', () => { btn.closest('.ltx-change').style.opacity='0.4'; ltxToast('Change rejected'); }));
+
+// Version restore
+document.querySelectorAll('.ltx-ver-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); ltxToast('Version restored'); }));
+
+// Figure insert/copy
+document.querySelectorAll('.ltx-fig-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); ltxToast(btn.textContent === 'Insert' ? '\\includegraphics{} inserted' : 'Path copied'); }));
+
+// Comment actions
+document.querySelectorAll('.ltx-comment-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); ltxToast(btn.textContent === 'Resolve' ? 'Comment resolved' : 'Reply added'); }));
+
+// Resize handle — working drag
+(function() {
+  const handle = document.getElementById('ltxResize');
+  const src = document.getElementById('ltxSource');
+  const prev = document.getElementById('ltxPreview');
+  if (!handle || !src || !prev) return;
+  let dragging = false;
+  handle.addEventListener('mousedown', (e) => { dragging = true; e.preventDefault(); document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'; });
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const split = src.parentElement;
+    const rect = split.getBoundingClientRect();
+    const pct = ((e.clientX - rect.left) / rect.width) * 100;
+    const clamped = Math.max(20, Math.min(80, pct));
+    src.style.flex = 'none'; src.style.width = clamped + '%';
+    prev.style.flex = 'none'; prev.style.width = (100 - clamped) + '%';
+  });
+  document.addEventListener('mouseup', () => { if (dragging) { dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; } });
+})();
+
+// Compile
+document.getElementById('ltxCompile')?.addEventListener('click', function() {
+  const orig = this.innerHTML;
+  this.style.opacity = '0.7'; this.style.pointerEvents = 'none';
+  this.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" style="animation:spin 1s linear infinite"><circle cx="8" cy="8" r="6" stroke-dasharray="28 12"/></svg> Building...';
+  setTimeout(() => { this.innerHTML = orig; this.style.opacity = ''; this.style.pointerEvents = ''; ltxToast('PDF preview ready'); }, 2000);
+});
+
+// Sidebar bottom — user panel toggle
+document.getElementById('sidebarUserBtn')?.addEventListener('click', () => {
+  const panel = document.getElementById('sidebarUserPanel');
+  const chevron = document.querySelector('.sidebar-user-chevron');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) { chevron.style.transform = 'rotate(180deg)'; }
+  else { chevron.style.transform = ''; }
+});
+// Theme switch toggle
+document.getElementById('themeSwitch')?.addEventListener('click', function(e) {
+  e.stopPropagation();
+  this.classList.toggle('dark');
+});
+
+// Resize logic
+function makeResizable(handle, target, side) {
+  let startX, startW, isResizing = false;
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    isResizing = true;
+    startX = e.clientX;
+    startW = target.offsetWidth;
+    handle.classList.add('active');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    function onMove(e) {
+      if (!isResizing) return;
+      const delta = side === 'right' ? e.clientX - startX : startX - e.clientX;
+      const newW = Math.max(side === 'right' ? 180 : 280, Math.min(startW + delta, window.innerWidth * 0.5));
+      target.style.width = newW + 'px';
+    }
+    function onUp() {
+      isResizing = false;
+      handle.classList.remove('active');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+makeResizable(document.getElementById('sidebarResizeHandle'), sidebar, 'right');
+makeResizable(document.getElementById('buddyResizeHandle'), buddyPanel, 'left');
+</script>
+</body>
+</html>
