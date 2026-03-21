@@ -24,13 +24,12 @@ ul { list-style: none; }
 .nav-link { font-size: 14px; font-weight: 500; color: rgba(36,16,19,0.65); display: flex; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; }
 .nav-link:hover { color: rgb(36,16,19); }
 .btn-get-started {
-  display: inline-flex; align-items: center; gap: 8px; background: #1E1145; color: #fff;
-  font-size: 14px; font-weight: 500; padding: 8px 8px 8px 20px; border-radius: 9999px;
+  display: inline-flex; align-items: center; gap: 6px; background: #6D28D9; color: #fff;
+  font-size: 14px; font-weight: 500; padding: 9px 20px; border-radius: var(--radius, 6px);
+  transition: background 0.2s ease;
 }
-.btn-get-started span {
-  background: #C4B5FD; display: flex; align-items: center; justify-content: center;
-  width: 32px; height: 32px; border-radius: 50%;
-}
+.btn-get-started:hover { background: #5B21B6; }
+.btn-get-started svg { width: 14px; height: 14px; }
 .hero-section {
   background: #fff; padding: 16px 36px 0; max-width: 1440px; margin: 0 auto;
 }
@@ -126,11 +125,11 @@ ul { list-style: none; }
 .suite-top-row { display: flex; gap: 32px; justify-content: space-between; align-items: center; padding: 36px 0; height: 124px; }
 .suite-top-row h2 { font-size: 48px; font-weight: 400; color: rgb(36,16,19); }
 .suite-get-btn {
-  color: rgb(109,40,217); font-size: 16px; font-weight: 580; padding: 6px 24px; border-radius: 8px;
-  height: 52px; border: 1px solid rgb(109,40,217); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 500; padding: 10px 24px; border-radius: 6px;
+  background: #6D28D9; border: none; display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; transition: background 0.2s;
 }
-.suite-get-btn:hover { background: rgba(109,40,217,0.06); }
+.suite-get-btn:hover { background: #5B21B6; }
 .suite-tabs {
   display: grid; grid-template-columns: repeat(7, 1fr); height: 70px; border-radius: 12px;
   overflow: hidden; border: 1px solid rgba(36,16,19,0.12);
@@ -156,9 +155,10 @@ ul { list-style: none; }
 .product-text .product-title { font-size: 48px; font-weight: 400; line-height: 48px; color: rgb(36,16,19); }
 .product-text .product-desc { font-size: 16px; color: rgba(36,16,19,0.76); line-height: 25.6px; max-width: 480px; }
 .product-text .learn-more-link {
-  color: rgb(109,40,217); font-size: 16px; font-weight: 580; display: inline-flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid rgba(109,40,217,0.5); padding-bottom: 2px; width: fit-content;
+  color: rgb(109,40,217); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
+  width: fit-content; transition: opacity 0.2s;
 }
+.product-text .learn-more-link:hover { opacity: 0.7; }
 .product-text .learn-more-link svg { width: 16px; height: 16px; }
 .product-features { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .product-features li { display: flex; gap: 16px; font-size: 16px; color: rgba(36,16,19,0.76); line-height: 24px; align-items: flex-start; }
@@ -183,10 +183,10 @@ ul { list-style: none; }
 .becoming-text p { font-size: 18px; line-height: 30.6px; color: rgba(252,250,247,0.6); max-width: 500px; }
 .becoming-text p em { font-style: italic; color: rgba(252,250,247,0.7); }
 .becoming-text .announcement-link {
-  color: #C4B5FD; font-size: 16px; font-weight: 580; display: inline-flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid rgba(196,181,253,0.3); padding-bottom: 2px; width: fit-content;
+  color: #C4B5FD; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
+  width: fit-content; transition: opacity 0.2s;
 }
-.becoming-text .announcement-link:hover { border-color: #C4B5FD; }
+.becoming-text .announcement-link:hover { opacity: 0.7; }
 .becoming-text .announcement-link svg { width: 16px; height: 16px; }
 .becoming-image {
   flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
@@ -212,8 +212,8 @@ ul { list-style: none; }
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .bottom-cta-btn {
-  background: #fff; color: #1E1145; border-radius: 9999px; padding: 6px 28px; height: 52px;
-  font-size: 16px; font-weight: 580; display: flex; align-items: center; justify-content: center;
+  background: #fff; color: #1E1145; border-radius: 6px; padding: 12px 28px;
+  font-size: 14px; font-weight: 500; display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; white-space: nowrap; transition: opacity 0.2s;
 }
 .bottom-cta-btn:hover { opacity: 0.9; }
@@ -247,17 +247,12 @@ ul { list-style: none; }
       <span style="font-size:20px;font-weight:700;letter-spacing:-0.5px;">ScholarSync</span>
     </a>
     <div style="display:flex;align-items:center;gap:32px;">
-      <button class="nav-link">Platform <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
-      <button class="nav-link">Solutions <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
-      <button class="nav-link">Resources <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
-      <a href="landing.html" class="nav-link" style="border:none;">Pricing</a>
+      <a href="#" class="nav-link">Pricing</a>
+      <a href="#" class="nav-link">Blog</a>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
-      <a href="index.html" style="font-size:14px;color:rgba(13,13,26,0.5);">Log in</a>
-      <a href="index.html" class="btn-get-started">
-        Get started
-        <span><svg width="16" height="16" fill="none" stroke="#1E1145" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg></span>
-      </a>
+      <a href="index.html" class="nav-link" style="border:none;">Log in</a>
+      <a href="index.html" class="btn-get-started">Get started <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </nav>
 </header>

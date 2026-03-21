@@ -96,6 +96,24 @@ Two layers:
   - **Sign out** — with door/arrow icon.
 - **Rationale for hiding theme toggle:** Light/dark mode is a set-once preference, not a frequent action. It doesn't deserve prime real estate as a standalone icon. Living under the user name keeps the sidebar bottom clean while remaining accessible.
 
+### Sidebar Customization — Workspace-First Architecture
+
+- The sidebar moved from a fixed tool catalog to a customizable workspace. Users add and remove tools to build their own sidebar.
+- **Draft is the only mandatory tool.** Every user gets Draft. It cannot be removed.
+- **"+ Add tool" button** at the bottom of the sidebar (above the user area). Dashed border, subtle, inviting. Opens a panel showing all available tools organized by Create/Research/Audit categories.
+- **Remove a tool**: Hover on any nav item (except Projects and Draft) to reveal a small × on the right side. Click × and the item slides out with a collapse animation. The tool returns to the "Add tool" panel as available.
+- **Category headers auto-show/hide**:
+  - Categories (CREATE, RESEARCH, AUDIT) only appear when they have tools in them
+  - CREATE label only shows if more than just Draft is present (Draft alone = no header)
+  - Empty categories disappear entirely
+  - When a category gains its first tool, the header appears automatically
+- **Minimal state**: A user with only Draft sees: Projects, Draft, + Add tool. No headers, no categories. Cleanest possible sidebar.
+- **Full state**: A researcher with all tools sees the familiar categorized sidebar with CREATE, RESEARCH, AUDIT sections.
+- **Rationale**: A journalist seeing LaTeX and Systematic Review thinks "this isn't for me." A student seeing 12 tools thinks "this is too complex." By letting users build their own sidebar, every persona feels the product was made for them. The depth is discovered, not imposed.
+- **Non-removable defaults**: Projects (always visible, not a tool) and Draft (the floor — everyone writes).
+- **No saved workspaces**: Unlike Adobe Premiere Pro's workspace switching, ScholarSync has one sidebar per user. No naming, no switching, no workspace management UI. Just add and remove tools. Simple.
+- **Onboarding implication**: During onboarding, ask what kind of work the user does. Pre-configure their sidebar with relevant tools. They can always add more or remove what they don't need.
+
 ### Sidebar Behavior
 - **Auto-collapses when entering the editor (Draft) or LaTeX editor.** Writing = distraction-free.
 - **Does NOT auto-collapse on other pages.**
@@ -319,6 +337,18 @@ All icons are white monochrome on the deep purple sidebar. The approach evolved 
 
 ---
 
+## Landing Page Design
+
+- **Colors aligned with app**: Purple accent `#714CB6` → `#6D28D9` (matches app). Dark sections `#0D0D1A` → `#1E1145` (matches app sidebar). All `rgb(113,76,182)` references updated to `rgb(109,40,217)`.
+- **Logo unified**: Double chevron icon replaced with "S" mark in purple rounded square — matches the app sidebar logo.
+- **Module names aligned**: Literature Search → Discover, Slides → Stage, Illustrations → Canvas. All tab labels, section labels, and footer links updated.
+- **Product tab icons**: Each tab now uses the same icon as the app sidebar (PNG files or matching SVGs), rendered inside colored squares with module accent colors. No duplicate colors across tabs.
+- **Navigation simplified**: Stripped from [Platform, Solutions, Resources, Pricing] down to [Pricing, Blog]. Rationale: Platform/Solutions are enterprise jargon for a product without enterprise customers. Resources is vague. Training/Videos belong inside the app. Blog is the SEO engine.
+- **Button anatomy unified**: Was 5 different button styles. Now 2: Primary (solid purple `#6D28D9`, 6px radius) for CTAs, and text links for secondary actions. "Get started" simplified from dark pill with lavender circle to a clean purple button with arrow.
+- **Content background difference is intentional**: Landing page uses `#F2F0EB` (warmer), app uses `#FFFFFF` (cleaner). Marketing sites should feel warmer than the product — Google's marketing site looks different from Google Docs. By design.
+
+---
+
 ## Open Decisions
 
 - [x] Sidebar color palette — deep purple Superhuman hero palette with animated gradient orbs (decided)
@@ -332,6 +362,8 @@ All icons are white monochrome on the deep purple sidebar. The approach evolved 
 - [x] Buddy panel redesign — Superhuman-style bold identity with card tabs (decided)
 - [x] Sidebar bottom section — theme toggle, settings, help icons (decided)
 - [x] LaTeX editor — ultra-minimal toolbar, Preview PDF, more menu, split default (decided)
+- [x] Sidebar customization — workspace-first with add/remove tools (decided)
+- [x] Landing page alignment — colors, icons, nav, buttons unified with app (decided)
 - [ ] Buddy icon — user provided robot illustration, needs simplified version for inline use
 - [ ] Compliance tool — exists in codebase, unclear if it merges with Audit
 - [ ] Live collaboration UX — Liveblocks is wired, but no design decisions made

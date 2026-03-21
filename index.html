@@ -158,6 +158,76 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
 }
 .nav-item.active .nav-label { font-weight: 500; color: #fff; }
 
+/* Remove tool × — appears on hover, right side */
+.nav-item-remove {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer; color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06);
+}
+.nav-item:hover .nav-item-remove { opacity: 1; }
+.nav-item-remove:hover { color: #fff; background: rgba(239,68,68,0.5); }
+.nav-item-remove svg { width: 10px; height: 10px; }
+/* Don't show remove on Projects or Draft (non-removable) */
+.nav-item.no-remove .nav-item-remove { display: none; }
+
+/* Remove animation */
+.nav-item.removing {
+  overflow: hidden;
+  animation: slideRemove 0.35s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes slideRemove {
+  0% { max-height: 40px; opacity: 1; transform: translateX(0); padding-top: 7px; padding-bottom: 7px; }
+  50% { opacity: 0; transform: translateX(20px); }
+  100% { max-height: 0; opacity: 0; transform: translateX(20px); padding-top: 0; padding-bottom: 0; margin: 0; }
+}
+
+/* + Add tool button */
+.sidebar-add-tool {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px; margin: 8px 10px;
+  border-radius: var(--radius); cursor: pointer;
+  color: rgba(255,255,255,0.35); font-size: 12px; font-weight: 500;
+  border: 1px dashed rgba(255,255,255,0.12);
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.sidebar-add-tool:hover {
+  color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.05);
+}
+.sidebar-add-tool:active { transform: scale(0.97); }
+.sidebar-add-tool svg { width: 14px; height: 14px; }
+
+/* Add tool panel — slides up from the + button area */
+.add-tool-panel {
+  display: none; margin: 0 10px 8px; padding: 8px 6px;
+  background: rgba(255,255,255,0.04); border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.06);
+  animation: panelSlideUp 0.2s cubic-bezier(0.4,0,0.2,1);
+  max-height: 45vh; overflow-y: auto;
+}
+.add-tool-panel.open { display: block; }
+.add-tool-panel::-webkit-scrollbar { width: 3px; }
+.add-tool-panel::-webkit-scrollbar-track { background: transparent; }
+.add-tool-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+@keyframes panelSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.add-tool-section { font-size: 8px; font-weight: 600; color: rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 6px; margin-top: 4px; }
+.add-tool-section:first-child { margin-top: 0; }
+.add-tool-item {
+  display: flex; align-items: center; gap: 6px; padding: 4px 6px;
+  border-radius: 4px; cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.4);
+  transition: all 0.15s ease;
+}
+.add-tool-item:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.05); }
+.add-tool-item.added { color: rgba(255,255,255,0.2); cursor: default; }
+.add-tool-item.added:hover { background: none; color: rgba(255,255,255,0.2); }
+.add-tool-item .add-check { margin-left: auto; font-size: 9px; color: rgba(255,255,255,0.2); }
+.add-tool-item .add-plus { margin-left: auto; font-size: 12px; color: rgba(255,255,255,0.2); transition: color 0.15s ease; }
+.add-tool-item:hover .add-plus { color: rgba(255,255,255,0.6); }
+
 .sidebar-bottom { display: flex; flex-direction: column; }
 
 /* User area */
@@ -989,27 +1059,46 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
       </div>
       <div class="sidebar-section">
         <div class="sidebar-nav">
-          <div class="nav-item active" data-view="dashboard"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff"/></svg></div><div class="nav-label">Projects</div></div>
+          <div class="nav-item active no-remove" data-view="dashboard"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff"/></svg></div><div class="nav-label">Projects</div></div>
         </div>
       </div>
       <div class="sidebar-section"><div class="sidebar-section-label">Create</div><div class="sidebar-nav">
-        <div class="nav-item" data-view="editor"><div class="nav-icon"><img src="icons/edit.png" alt="Draft"></div><div class="nav-label">Draft</div></div>
-        <div class="nav-item" data-view="latex"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M6 3.5L2 9l4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 2.5l-3 13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="nav-label">LaTeX</div></div>
-        <div class="nav-item" data-view="canvas"><div class="nav-icon"><img src="icons/pen-tool.png" alt="Canvas"></div><div class="nav-label">Canvas</div></div>
-        <div class="nav-item" data-view="poster"><div class="nav-icon"><img src="icons/poster.png" alt="Poster"></div><div class="nav-label">Poster</div></div>
-        <div class="nav-item" data-view="stage"><div class="nav-icon"><img src="icons/business-analyst.png" alt="Stage" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Stage</div></div>
+        <div class="nav-item no-remove" data-view="editor"><div class="nav-icon"><img src="icons/edit.png" alt="Draft"></div><div class="nav-label">Draft</div></div>
+        <div class="nav-item" data-view="latex"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M6 3.5L2 9l4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 2.5l-3 13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="nav-label">LaTeX</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="canvas"><div class="nav-icon"><img src="icons/pen-tool.png" alt="Canvas"></div><div class="nav-label">Canvas</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="poster"><div class="nav-icon"><img src="icons/poster.png" alt="Poster"></div><div class="nav-label">Poster</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="stage"><div class="nav-icon"><img src="icons/business-analyst.png" alt="Stage" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Stage</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
       </div></div>
       <div class="sidebar-section"><div class="sidebar-section-label">Research</div><div class="sidebar-nav">
-        <div class="nav-item" data-view="discover"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M12.5 12.5l3 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="nav-label">Discover</div></div>
-        <div class="nav-item" data-view="reading-room"><div class="nav-icon"><img src="icons/reading-room.png" alt="Reading Room"></div><div class="nav-label">Reading Room</div></div>
-        <div class="nav-item" data-view="pulse"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="#fff" stroke="none"/></svg></div><div class="nav-label">Pulse</div></div>
-        <div class="nav-item" data-view="deep-research"><div class="nav-icon"><img src="icons/creativity.png" alt="Deep Research" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Deep Research</div></div>
-        <div class="nav-item" data-view="library"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="3" height="12" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1"/><rect x="7.5" y="2" width="3" height="13" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.7"/><rect x="12" y="4" width="3" height="11" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.45"/></svg></div><div class="nav-label">Library</div></div>
-        <div class="nav-item" data-view="systematic-review"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M3 2h12v3H3z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M5 8h8v2.5H5z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 13.5h4v2.5H7z" fill="#fff" fill-opacity="0.3" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 5v3M9 10.5v3" stroke="#fff" stroke-width="1.2"/></svg></div><div class="nav-label">Systematic Review</div></div>
+        <div class="nav-item" data-view="discover"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M12.5 12.5l3 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="nav-label">Discover</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="reading-room"><div class="nav-icon"><img src="icons/reading-room.png" alt="Reading Room"></div><div class="nav-label">Reading Room</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="pulse"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="#fff" stroke="none"/></svg></div><div class="nav-label">Pulse</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="deep-research"><div class="nav-icon"><img src="icons/creativity.png" alt="Deep Research" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)"></div><div class="nav-label">Deep Research</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="library"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="3" height="12" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1"/><rect x="7.5" y="2" width="3" height="13" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.7"/><rect x="12" y="4" width="3" height="11" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.45"/></svg></div><div class="nav-label">Library</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
+        <div class="nav-item" data-view="systematic-review"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M3 2h12v3H3z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M5 8h8v2.5H5z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 13.5h4v2.5H7z" fill="#fff" fill-opacity="0.3" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 5v3M9 10.5v3" stroke="#fff" stroke-width="1.2"/></svg></div><div class="nav-label">Systematic Review</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
       </div></div>
       <div class="sidebar-section"><div class="sidebar-section-label">Audit</div><div class="sidebar-nav">
-        <div class="nav-item" data-view="audit"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2L3 4.5v4.5c0 4 2.5 6 6 7.5 3.5-1.5 6-3.5 6-7.5V4.5L9 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 9l2 2 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-label">Integrity Check</div></div>
+        <div class="nav-item" data-view="audit"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2L3 4.5v4.5c0 4 2.5 6 6 7.5 3.5-1.5 6-3.5 6-7.5V4.5L9 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 9l2 2 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-label">Integrity Check</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div></div>
       </div></div>
+      <!-- Add tool -->
+      <div class="sidebar-add-tool" id="addToolBtn"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg> Add tool</div>
+      <div class="add-tool-panel" id="addToolPanel">
+        <div class="add-tool-section">Create</div>
+        <div class="add-tool-item added">Draft <span class="add-check">Added</span></div>
+        <div class="add-tool-item" data-addtool="latex">LaTeX <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="canvas">Canvas <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="poster">Poster <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="stage">Stage <span class="add-plus">+</span></div>
+        <div class="add-tool-section">Research</div>
+        <div class="add-tool-item" data-addtool="discover">Discover <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="reading-room">Reading Room <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="pulse">Pulse <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="deep-research">Deep Research <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="library">Library <span class="add-plus">+</span></div>
+        <div class="add-tool-item" data-addtool="systematic-review">Systematic Review <span class="add-plus">+</span></div>
+        <div class="add-tool-section">Audit</div>
+        <div class="add-tool-item" data-addtool="audit">Integrity Check <span class="add-plus">+</span></div>
+      </div>
     </div>
     <div class="sidebar-bottom">
       <div class="sidebar-user" id="sidebarUserBtn"><div class="sidebar-avatar">SS</div><div class="sidebar-user-name">Dr. Singh</div><svg class="sidebar-user-chevron" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></div>
@@ -1662,6 +1751,138 @@ document.getElementById('ltxCompile')?.addEventListener('click', function() {
   this.innerHTML = '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16" style="animation:spin 1s linear infinite"><circle cx="8" cy="8" r="6" stroke-dasharray="28 12"/></svg> Building...';
   setTimeout(() => { this.innerHTML = orig; this.style.opacity = ''; this.style.pointerEvents = ''; ltxToast('PDF preview ready'); }, 2000);
 });
+
+// Remove tool — click × to animate out, update add panel
+document.querySelectorAll('.nav-item-remove').forEach(btn => btn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const item = btn.closest('.nav-item');
+  const viewId = item.dataset.view;
+  item.classList.add('removing');
+  item.addEventListener('animationend', () => {
+    item.remove();
+    // Mark as available again in the add tool panel
+    const addItem = document.querySelector(`.add-tool-item[data-addtool="${viewId}"]`);
+    if (addItem) { addItem.classList.remove('added'); const check = addItem.querySelector('.add-check'); if (check) { check.className = 'add-plus'; check.textContent = '+'; } }
+    updateCategoryVisibility();
+  });
+}));
+
+// Auto-hide empty category sections + hide Create label if only Draft
+function updateCategoryVisibility() {
+  document.querySelectorAll('.sidebar-section').forEach(section => {
+    const label = section.querySelector('.sidebar-section-label');
+    if (!label) return; // Skip the Projects section (no label)
+    const nav = section.querySelector('.sidebar-nav');
+    if (!nav) return;
+    const items = nav.querySelectorAll('.nav-item:not(.removing)');
+    const category = label.textContent.trim().toLowerCase();
+
+    if (category === 'create') {
+      // Hide Create label if only Draft remains (non-removable)
+      const nonDraftItems = Array.from(items).filter(i => i.dataset.view !== 'editor');
+      section.style.display = items.length === 0 ? 'none' : '';
+      label.style.display = nonDraftItems.length > 0 ? '' : 'none';
+    } else {
+      // Hide entire section if no items
+      section.style.display = items.length > 0 ? '' : 'none';
+    }
+  });
+}
+updateCategoryVisibility();
+
+// Add tool panel toggle — sync added state with what's currently in sidebar
+document.getElementById('addToolBtn')?.addEventListener('click', () => {
+  // Before opening, check which tools are already in the sidebar
+  document.querySelectorAll('.add-tool-item[data-addtool]').forEach(item => {
+    const toolId = item.dataset.addtool;
+    const inSidebar = document.querySelector(`.nav-item[data-view="${toolId}"]`);
+    if (inSidebar) {
+      item.classList.add('added');
+      const el = item.querySelector('.add-plus, .add-check');
+      if (el) { el.className = 'add-check'; el.textContent = 'Added'; }
+    } else {
+      item.classList.remove('added');
+      const el = item.querySelector('.add-plus, .add-check');
+      if (el) { el.className = 'add-plus'; el.textContent = '+'; }
+    }
+  });
+  document.getElementById('addToolPanel').classList.toggle('open');
+});
+
+// Add tool — actually adds to sidebar, closes panel
+document.querySelectorAll('.add-tool-item[data-addtool]').forEach(item => item.addEventListener('click', () => {
+  if (item.classList.contains('added')) return;
+  const toolId = item.dataset.addtool;
+  const toolName = item.textContent.replace('+','').replace('Added','').trim();
+
+  // Mark as added in panel
+  item.classList.add('added');
+  const plus = item.querySelector('.add-plus');
+  if (plus) { plus.className = 'add-check'; plus.textContent = 'Added'; }
+
+  // Find the right section to add to
+  const toolCategories = {
+    'latex':'Create','canvas':'Create','poster':'Create','stage':'Create',
+    'discover':'Research','reading-room':'Research','pulse':'Research',
+    'deep-research':'Research','library':'Research','systematic-review':'Research',
+    'audit':'Audit'
+  };
+  const category = toolCategories[toolId];
+
+  // Find the sidebar-nav for this category
+  let targetNav = null;
+  document.querySelectorAll('.sidebar-section-label').forEach(label => {
+    if (label.textContent.trim().toLowerCase() === category.toLowerCase()) {
+      targetNav = label.nextElementSibling || label.parentElement.querySelector('.sidebar-nav');
+    }
+  });
+
+  if (targetNav) {
+    // Tool icon map — actual icons matching the sidebar
+    const toolIcons = {
+      'latex': '<svg viewBox="0 0 18 18" fill="none"><path d="M6 3.5L2 9l4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 2.5l-3 13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      'canvas': '<img src="icons/pen-tool.png" alt="Canvas">',
+      'poster': '<img src="icons/poster.png" alt="Poster">',
+      'stage': '<img src="icons/business-analyst.png" alt="Stage" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)">',
+      'discover': '<svg viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M12.5 12.5l3 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>',
+      'reading-room': '<img src="icons/reading-room.png" alt="Reading Room">',
+      'pulse': '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.5" fill="#fff" stroke="none"/></svg>',
+      'deep-research': '<img src="icons/creativity.png" alt="Deep Research" style="width:20px;height:20px;filter:brightness(0) invert(1) opacity(0.75)">',
+      'library': '<svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="3" height="12" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1"/><rect x="7.5" y="2" width="3" height="13" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.7"/><rect x="12" y="4" width="3" height="11" rx="0.8" fill="#fff" stroke="#fff" stroke-width="1" opacity="0.45"/></svg>',
+      'systematic-review': '<svg viewBox="0 0 18 18" fill="none"><path d="M3 2h12v3H3z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M5 8h8v2.5H5z" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 13.5h4v2.5H7z" fill="#fff" fill-opacity="0.3" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 5v3M9 10.5v3" stroke="#fff" stroke-width="1.2"/></svg>',
+      'audit': '<svg viewBox="0 0 18 18" fill="none"><path d="M9 2L3 4.5v4.5c0 4 2.5 6 6 7.5 3.5-1.5 6-3.5 6-7.5V4.5L9 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 9l2 2 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    };
+
+    // Create the nav item with the correct icon
+    const newItem = document.createElement('div');
+    newItem.className = 'nav-item';
+    newItem.dataset.view = toolId;
+    newItem.style.maxHeight = '0'; newItem.style.opacity = '0'; newItem.style.overflow = 'hidden';
+    newItem.style.transition = 'all 0.3s cubic-bezier(0.4,0,0.2,1)';
+    newItem.innerHTML = `<div class="nav-icon">${toolIcons[toolId] || '<svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#fff" stroke-width="1.3"/></svg>'}</div><div class="nav-label">${toolName}</div><div class="nav-item-remove"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>`;
+    targetNav.appendChild(newItem);
+
+    // Wire up the new item's click and remove
+    newItem.addEventListener('click', () => switchView(toolId));
+    newItem.querySelector('.nav-item-remove').addEventListener('click', (e) => {
+      e.stopPropagation();
+      newItem.classList.add('removing');
+      newItem.addEventListener('animationend', () => {
+        newItem.remove();
+        item.classList.remove('added');
+        const check = item.querySelector('.add-check');
+        if (check) { check.className = 'add-plus'; check.textContent = '+'; }
+        updateCategoryVisibility();
+      });
+    });
+
+    // Animate in and update visibility
+    requestAnimationFrame(() => { newItem.style.maxHeight = '40px'; newItem.style.opacity = '1'; newItem.style.overflow = ''; updateCategoryVisibility(); });
+  }
+
+  // Close the panel after adding
+  setTimeout(() => { document.getElementById('addToolPanel').classList.remove('open'); }, 300);
+}));
 
 // Sidebar bottom — user panel toggle
 document.getElementById('sidebarUserBtn')?.addEventListener('click', () => {
