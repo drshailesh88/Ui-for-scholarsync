@@ -55,11 +55,19 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
 /* ═══ SIDEBAR ═══ */
 .sidebar {
   width: 224px; flex-shrink: 0; background: var(--bg-sidebar);
-  display: flex; flex-direction: column; justify-content: space-between;
+  display: flex; flex-direction: column;
   padding: 16px 10px; transition: transform 0.2s ease;
   position: relative; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06);
   overflow: hidden;
 }
+/* Scrollable nav area between logo and bottom */
+.sidebar-nav-area {
+  flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0;
+}
+.sidebar-nav-area::-webkit-scrollbar { width: 3px; }
+.sidebar-nav-area::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+.sidebar-nav-area::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 .sidebar::before {
   content: ''; position: absolute; top: -40%; left: -30%; width: 160%; height: 80%;
   background: radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.25) 0%, transparent 60%),
@@ -204,29 +212,30 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
   background: rgba(255,255,255,0.04); border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.06);
   animation: panelSlideUp 0.2s cubic-bezier(0.4,0,0.2,1);
-  max-height: 45vh; overflow-y: auto;
+  max-height: 40vh; overflow-y: auto;
 }
 .add-tool-panel.open { display: block; }
 .add-tool-panel::-webkit-scrollbar { width: 3px; }
 .add-tool-panel::-webkit-scrollbar-track { background: transparent; }
-.add-tool-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+.add-tool-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+.add-tool-panel::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 @keyframes panelSlideUp {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.add-tool-section { font-size: 8px; font-weight: 600; color: rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 6px; margin-top: 4px; }
+.add-tool-section { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; margin-top: 6px; }
 .add-tool-section:first-child { margin-top: 0; }
 .add-tool-item {
-  display: flex; align-items: center; gap: 6px; padding: 4px 6px;
-  border-radius: 4px; cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.4);
+  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  border-radius: 4px; cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.5);
   transition: all 0.15s ease;
 }
-.add-tool-item:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.05); }
-.add-tool-item.added { color: rgba(255,255,255,0.2); cursor: default; }
-.add-tool-item.added:hover { background: none; color: rgba(255,255,255,0.2); }
-.add-tool-item .add-check { margin-left: auto; font-size: 9px; color: rgba(255,255,255,0.2); }
-.add-tool-item .add-plus { margin-left: auto; font-size: 12px; color: rgba(255,255,255,0.2); transition: color 0.15s ease; }
-.add-tool-item:hover .add-plus { color: rgba(255,255,255,0.6); }
+.add-tool-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
+.add-tool-item.added { color: rgba(255,255,255,0.25); cursor: default; }
+.add-tool-item.added:hover { background: none; color: rgba(255,255,255,0.25); }
+.add-tool-item .add-check { margin-left: auto; font-size: 10px; color: rgba(255,255,255,0.25); }
+.add-tool-item .add-plus { margin-left: auto; font-size: 14px; color: rgba(255,255,255,0.25); transition: color 0.15s ease; }
+.add-tool-item:hover .add-plus { color: rgba(255,255,255,0.7); }
 
 .sidebar-bottom { display: flex; flex-direction: column; }
 
@@ -264,6 +273,27 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
 }
 .sidebar-user-panel-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
 .sidebar-user-panel-item svg { width: 14px; height: 14px; }
+/* Sidebar text size modes */
+.sidebar.text-large .nav-label { font-size: 15px; }
+.sidebar.text-large .sidebar-section-label { font-size: 12px; }
+.sidebar.text-large .sidebar-user-name { font-size: 14px; }
+.sidebar.text-large .add-tool-item { font-size: 15px; }
+.sidebar.text-large .add-tool-section { font-size: 11px; }
+.sidebar.text-large .sidebar-add-tool { font-size: 14px; }
+
+/* Text size toggle button */
+.text-size-toggle {
+  display: flex; align-items: center; gap: 2px;
+  background: rgba(255,255,255,0.1); border-radius: 6px; padding: 2px; margin-left: auto;
+}
+.text-size-opt {
+  padding: 3px 7px; border-radius: 4px; cursor: pointer;
+  color: rgba(255,255,255,0.4); font-weight: 600;
+  transition: all 0.15s ease;
+}
+.text-size-opt:hover { color: rgba(255,255,255,0.6); }
+.text-size-opt.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+
 /* Theme toggle switch — Uiverse-inspired */
 .theme-switch {
   width: 38px; height: 22px; border-radius: 11px;
@@ -388,6 +418,8 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .gdocs-card.filtered { display: none; }
+.gdocs-card .mark-indicators { position: absolute; top: 8px; right: 8px; display: flex; gap: 3px; }
+.gdocs-card .mark-indicator { width: 14px; height: 10px; }
 .gdocs-status-filters { display: flex; gap: 2px; }
 .gdocs-type-sep { width: 1px; height: 18px; background: var(--border); margin: 0 10px; }
 .gdocs-type-filters { display: flex; gap: 2px; }
@@ -1008,6 +1040,124 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
 .placeholder-view h2 { font-family: var(--font-serif); font-size: 24px; font-weight: 600; }
 .placeholder-view p { font-size: 14px; color: var(--text-tertiary); max-width: 400px; text-align: center; }
 
+/* ═══ MARK SYSTEM (Important + Notes tags) ═══ */
+/* Mark button in toolbar */
+.mark-btn {
+  display: flex; align-items: center; gap: 5px; padding: 5px 10px;
+  font-size: 12px; font-weight: 500; color: var(--text-tertiary); cursor: pointer;
+  border-radius: var(--radius); transition: all 0.15s ease; position: relative;
+}
+.mark-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+.mark-btn svg { width: 14px; height: 14px; }
+.mark-btn-indicators { display: flex; gap: 3px; margin-left: 2px; }
+.mark-btn-indicator { width: 12px; height: 8px; object-fit: contain; display: none; }
+.mark-btn-indicator.visible { display: inline; }
+.mark-btn-indicator.important { filter: brightness(0) saturate(100%) invert(67%) sepia(64%) saturate(2000%) hue-rotate(360deg) brightness(100%); }
+.mark-btn-indicator.notes { filter: brightness(0) saturate(100%) invert(40%) sepia(90%) saturate(600%) hue-rotate(200deg) brightness(100%); }
+/* Mark dropdown */
+.mark-dropdown {
+  display: none; position: absolute; top: 100%; right: 0; z-index: 60;
+  background: var(--bg-app); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 4px; min-width: 160px; margin-top: 4px;
+}
+.mark-dropdown.open { display: block; }
+.mark-option {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+  font-size: 12.5px; color: var(--text-primary); cursor: pointer;
+  border-radius: 4px; transition: background 0.08s;
+}
+.mark-option:hover { background: var(--bg-hover); }
+.mark-option .mark-tag { width: 14px; height: 10px; object-fit: contain; }
+.mark-option .mark-tag.important { filter: brightness(0) saturate(100%) invert(67%) sepia(64%) saturate(2000%) hue-rotate(360deg) brightness(100%); }
+.mark-option .mark-tag.notes { filter: brightness(0) saturate(100%) invert(40%) sepia(90%) saturate(600%) hue-rotate(200deg) brightness(100%); }
+.mark-option .mark-check { margin-left: auto; font-size: 13px; color: var(--accent); display: none; }
+.mark-option.active .mark-check { display: inline; }
+
+/* Mark indicators on project list items */
+.mark-indicators { display: flex; gap: 3px; margin-left: 8px; flex-shrink: 0; }
+.mark-indicator { width: 12px; height: 8px; object-fit: contain; }
+.mark-indicator.important { filter: brightness(0) saturate(100%) invert(67%) sepia(64%) saturate(2000%) hue-rotate(360deg) brightness(100%); }
+.mark-indicator.notes { filter: brightness(0) saturate(100%) invert(40%) sepia(90%) saturate(600%) hue-rotate(200deg) brightness(100%); }
+
+/* Mark filter chips on dashboard */
+.mark-filter {
+  padding: 5px 10px; font-size: 12px; font-weight: 500; color: var(--text-tertiary);
+  cursor: pointer; transition: all var(--transition); border: 1px solid transparent;
+  border-radius: var(--radius); display: flex; align-items: center; gap: 5px;
+}
+.mark-filter:hover { color: var(--text-secondary); }
+.mark-filter.active { border-color: var(--border); background: var(--bg-surface); }
+.mark-filter img { width: 12px; height: 8px; object-fit: contain; }
+.mark-filter.important img { filter: brightness(0) saturate(100%) invert(67%) sepia(64%) saturate(2000%) hue-rotate(360deg) brightness(100%); }
+.mark-filter.notes img { filter: brightness(0) saturate(100%) invert(40%) sepia(90%) saturate(600%) hue-rotate(200deg) brightness(100%); }
+
+/* ═══ SHORTCUTS PANEL (floating, draggable, resizable) ═══ */
+.shortcuts-panel {
+  display: none; position: fixed; z-index: 500;
+  top: 100px; right: 40px; width: 320px; min-width: 240px; min-height: 200px;
+  background: var(--bg-app); border: 1px solid var(--border-strong);
+  border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  flex-direction: column; overflow: hidden;
+  resize: both;
+}
+.shortcuts-panel.open { display: flex; }
+
+.shortcuts-titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+  cursor: grab; user-select: none; flex-shrink: 0;
+}
+.shortcuts-titlebar:active { cursor: grabbing; }
+.shortcuts-titlebar-left { display: flex; align-items: center; gap: 8px; }
+.shortcuts-titlebar-label {
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+}
+.shortcuts-titlebar-module {
+  font-size: 10px; font-weight: 500; color: var(--accent);
+  background: var(--accent-light); padding: 2px 7px; border-radius: 4px;
+}
+.shortcuts-close {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); border-radius: 4px;
+}
+.shortcuts-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+.shortcuts-search {
+  margin: 8px 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 12px; font-family: var(--font-sans); background: var(--bg-app);
+  outline: none; color: var(--text-primary);
+}
+.shortcuts-search:focus { border-color: var(--accent); }
+.shortcuts-search::placeholder { color: var(--text-tertiary); }
+
+.shortcuts-body {
+  flex: 1; overflow-y: auto; padding: 4px 12px 12px;
+  max-height: 60vh;
+}
+.shortcuts-body::-webkit-scrollbar { width: 4px; }
+.shortcuts-body::-webkit-scrollbar-track { background: transparent; margin: 4px 0; }
+.shortcuts-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
+.shortcuts-body::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+.shortcuts-group { margin-bottom: 12px; }
+.shortcuts-group-label {
+  font-size: 9px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 4px 0; margin-bottom: 2px;
+}
+.shortcut-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+}
+.shortcut-row:last-child { border-bottom: none; }
+.shortcut-action { font-size: 12px; color: var(--text-secondary); }
+.shortcut-keys { display: flex; gap: 3px; }
+.shortcut-key {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  color: var(--text-secondary); background: var(--bg-surface);
+  padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);
+  min-width: 20px; text-align: center;
+}
+
 /* ═══ COMMAND PALETTE ═══ */
 .cmd-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none;
@@ -1057,6 +1207,7 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
         </a>
         <div class="sidebar-close" id="sidebarClose"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M10 2l-6 6 6 6"/></svg></div>
       </div>
+      <div class="sidebar-nav-area">
       <div class="sidebar-section">
         <div class="sidebar-nav">
           <div class="nav-item active no-remove" data-view="dashboard"><div class="nav-icon"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff"/><rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff"/><rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff"/></svg></div><div class="nav-label">Projects</div></div>
@@ -1099,10 +1250,11 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
         <div class="add-tool-section">Audit</div>
         <div class="add-tool-item" data-addtool="audit">Integrity Check <span class="add-plus">+</span></div>
       </div>
-    </div>
+      </div>
     <div class="sidebar-bottom">
       <div class="sidebar-user" id="sidebarUserBtn"><div class="sidebar-avatar">SS</div><div class="sidebar-user-name">Dr. Singh</div><svg class="sidebar-user-chevron" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></div>
       <div class="sidebar-user-panel" id="sidebarUserPanel">
+        <div class="sidebar-user-panel-item"><span>Text size</span><div class="text-size-toggle"><span class="text-size-opt active" data-size="normal" style="font-size:11px">A<span style="font-size:9px;opacity:0.6">−</span></span><span class="text-size-opt" data-size="large" style="font-size:15px">A<span style="font-size:11px;opacity:0.6">+</span></span></div></div>
         <div class="sidebar-user-panel-item"><span>Dark mode</span><div class="theme-switch" id="themeSwitch"></div></div>
         <div class="sidebar-user-panel-item"><span>Settings</span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
         <div class="sidebar-user-panel-item"><span>Keyboard shortcuts</span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="14" height="14"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg></div>
@@ -1138,6 +1290,8 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
           <div class="gdocs-status-filters"><div class="gdocs-filter status-filter active" data-status="all">All</div><div class="gdocs-filter status-filter" data-status="active">Active</div><div class="gdocs-filter status-filter" data-status="completed">Completed</div></div>
           <div class="gdocs-type-sep"></div>
           <div class="gdocs-type-filters"><div class="gdocs-filter type-filter" data-type-filter="draft">Draft</div><div class="gdocs-filter type-filter" data-type-filter="research">Research</div><div class="gdocs-filter type-filter" data-type-filter="review">Review</div><div class="gdocs-filter type-filter" data-type-filter="presentation">Presentation</div></div>
+          <div class="gdocs-type-sep"></div>
+          <div class="gdocs-type-filters"><div class="mark-filter" data-mark-filter="important"><img src="icons/tag.png" alt=""> Important</div><div class="mark-filter" data-mark-filter="notes"><img src="icons/tag.png" alt=""> Notes</div></div>
           <div class="gdocs-layout-toggle">
             <div class="gdocs-layout-btn active" data-layout="list" title="List view"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h12"/></svg></div>
             <div class="gdocs-layout-btn" data-layout="grid" title="Grid view"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="5" height="5" rx="1"/><rect x="9.5" y="1.5" width="5" height="5" rx="1"/><rect x="1.5" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg></div>
@@ -1154,23 +1308,23 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
       </div>
       <div class="gdocs-section-label">Recent</div>
       <div class="gdocs-list">
-        <div class="gdocs-item" data-nav="editor" data-type="draft" data-status="active"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-item-meta">3,240 words · 12 citations · Methods in progress</div></div><div class="gdocs-item-time">2h ago</div></div>
+        <div class="gdocs-item" data-nav="editor" data-type="draft" data-status="active" data-marks="important"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-item-meta">3,240 words · 12 citations · Methods in progress</div></div><div class="mark-indicators"><img class="mark-indicator important" src="icons/tag.png" alt="Important"></div><div class="gdocs-item-time">2h ago</div></div>
         <div class="gdocs-item" data-nav="deep-research" data-type="research" data-status="completed"><div class="gdocs-item-dot" style="background:var(--research-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">SGLT2 mechanisms in HFpEF — multi-perspective synthesis</div><div class="gdocs-item-meta">Completed · 28 papers · 4 perspectives</div></div><div class="gdocs-item-time">6h ago</div></div>
-        <div class="gdocs-item" data-nav="systematic-review" data-type="review" data-status="active"><div class="gdocs-item-dot" style="background:var(--review-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-item-meta">Screening · 35 of 47 papers reviewed</div></div><div class="gdocs-item-time">1d ago</div></div>
+        <div class="gdocs-item" data-nav="systematic-review" data-type="review" data-status="active" data-marks="important notes"><div class="gdocs-item-dot" style="background:var(--review-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-item-meta">Screening · 35 of 47 papers reviewed</div></div><div class="mark-indicators"><img class="mark-indicator important" src="icons/tag.png" alt="Important"><img class="mark-indicator notes" src="icons/tag.png" alt="Notes"></div><div class="gdocs-item-time">1d ago</div></div>
         <div class="gdocs-item" data-type="presentation" data-status="active"><div class="gdocs-item-dot" style="background:var(--stage-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">NEJM Submission Results — Conference Talk</div><div class="gdocs-item-meta">18 slides · Defense prep not run</div></div><div class="gdocs-item-time">3d ago</div></div>
         <div class="gdocs-item" data-type="research" data-status="completed"><div class="gdocs-item-dot" style="background:var(--research-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Oxidative stress pathways in SGLT2i cardioprotection</div><div class="gdocs-item-meta">Completed · 19 papers · 3 perspectives</div></div><div class="gdocs-item-time">4d ago</div></div>
-        <div class="gdocs-item" data-type="draft" data-status="active"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-item-meta">890 words · 4 citations · Final review</div></div><div class="gdocs-item-time">5d ago</div></div>
+        <div class="gdocs-item" data-type="draft" data-status="active" data-marks="notes"><div class="gdocs-item-dot" style="background:var(--editor-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-item-meta">890 words · 4 citations · Final review</div></div><div class="mark-indicators"><img class="mark-indicator notes" src="icons/tag.png" alt="Notes"></div><div class="gdocs-item-time">5d ago</div></div>
         <div class="gdocs-item" data-type="draft" data-status="completed"><div class="gdocs-item-dot" style="background:var(--latex-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">Cardiac MRI Protocol — Supplementary Methods</div><div class="gdocs-item-meta">LaTeX · 2 files · Last compiled successfully</div></div><div class="gdocs-item-time">1w ago</div></div>
         <div class="gdocs-item" data-type="presentation" data-status="active"><div class="gdocs-item-dot" style="background:var(--canvas-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">SGLT2 Mechanism Pathway — Figure 2</div><div class="gdocs-item-meta">Illustration · SVG · 1200×800</div></div><div class="gdocs-item-time">1w ago</div></div>
         <div class="gdocs-item" data-type="review" data-status="completed"><div class="gdocs-item-dot" style="background:var(--review-accent)"></div><div class="gdocs-item-body"><div class="gdocs-item-title">GLP-1 Agonists in Obesity — Systematic Review</div><div class="gdocs-item-meta">Completed · 62 papers · Published in Lancet</div></div><div class="gdocs-item-time">3w ago</div></div>
       </div>
       <div class="gdocs-grid" style="display:none">
-        <div class="gdocs-card" data-nav="editor" data-type="draft" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:88%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:72%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:60%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Impact of SGLT2 Inhibitors on Cardiac...</div></div><div class="gdocs-card-meta">3,240 words · 12 citations · 2h ago</div></div></div>
+        <div class="gdocs-card" data-nav="editor" data-type="draft" data-status="active" data-marks="important" style="position:relative"><div class="mark-indicators"><img class="mark-indicator important" src="icons/tag.png" alt=""></div><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Impact of SGLT2 Inhibitors on Cardiac Remodeling in HFpEF</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:88%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:72%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:60%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Impact of SGLT2 Inhibitors on Cardiac...</div></div><div class="gdocs-card-meta">3,240 words · 12 citations · 2h ago</div></div></div>
         <div class="gdocs-card" data-nav="deep-research" data-type="research" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">SGLT2 mechanisms in HFpEF — multi-perspective synthesis</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:80%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:65%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:92%"></div><div class="gdocs-card-preview-line" style="width:45%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--research-accent)"></div><div class="gdocs-card-title">SGLT2 mechanisms in HFpEF</div></div><div class="gdocs-card-meta">Completed · 28 papers · 6h ago</div></div></div>
-        <div class="gdocs-card" data-nav="systematic-review" data-type="review" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:75%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:55%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--review-accent)"></div><div class="gdocs-card-title">AI Diagnostics in Radiology</div></div><div class="gdocs-card-meta">Screening · 35 of 47 papers · 1d ago</div></div></div>
+        <div class="gdocs-card" data-nav="systematic-review" data-type="review" data-status="active" data-marks="important notes" style="position:relative"><div class="mark-indicators"><img class="mark-indicator important" src="icons/tag.png" alt=""><img class="mark-indicator notes" src="icons/tag.png" alt=""></div><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">AI Diagnostics in Radiology — Meta-analysis</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:75%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:55%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--review-accent)"></div><div class="gdocs-card-title">AI Diagnostics in Radiology</div></div><div class="gdocs-card-meta">Screening · 35 of 47 papers · 1d ago</div></div></div>
         <div class="gdocs-card" data-type="presentation" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">NEJM Submission Results — Conference Talk</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:70%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:40%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--stage-accent)"></div><div class="gdocs-card-title">NEJM Submission Results</div></div><div class="gdocs-card-meta">18 slides · 3d ago</div></div></div>
         <div class="gdocs-card" data-type="research" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Oxidative stress pathways in SGLT2i cardioprotection</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:88%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:78%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:50%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--research-accent)"></div><div class="gdocs-card-title">Oxidative stress pathways</div></div><div class="gdocs-card-meta">Completed · 19 papers · 4d ago</div></div></div>
-        <div class="gdocs-card" data-type="draft" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:92%"></div><div class="gdocs-card-preview-line" style="width:68%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:80%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Letter to Editor: Martinez-Rios</div></div><div class="gdocs-card-meta">890 words · 4 citations · 5d ago</div></div></div>
+        <div class="gdocs-card" data-type="draft" data-status="active" data-marks="notes" style="position:relative"><div class="mark-indicators"><img class="mark-indicator notes" src="icons/tag.png" alt=""></div><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Letter to Editor: Response to Martinez-Rios commentary</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:92%"></div><div class="gdocs-card-preview-line" style="width:68%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:80%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--editor-accent)"></div><div class="gdocs-card-title">Letter to Editor: Martinez-Rios</div></div><div class="gdocs-card-meta">890 words · 4 citations · 5d ago</div></div></div>
         <div class="gdocs-card" data-type="draft" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">Cardiac MRI Protocol — Supplementary Methods</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:85%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:95%"></div><div class="gdocs-card-preview-line" style="width:72%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:48%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--latex-accent)"></div><div class="gdocs-card-title">Cardiac MRI Protocol</div></div><div class="gdocs-card-meta">LaTeX · 2 files · 1w ago</div></div></div>
         <div class="gdocs-card" data-type="presentation" data-status="active"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">SGLT2 Mechanism Pathway — Figure 2</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:60%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:45%"></div><div class="gdocs-card-preview-line" style="width:80%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--canvas-accent)"></div><div class="gdocs-card-title">SGLT2 Mechanism Pathway</div></div><div class="gdocs-card-meta">Illustration · SVG · 1w ago</div></div></div>
         <div class="gdocs-card" data-type="review" data-status="completed"><div class="gdocs-card-preview"><div class="gdocs-card-preview-title">GLP-1 Agonists in Obesity — Systematic Review</div><div class="gdocs-card-preview-lines"><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:90%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:82%"></div><div class="gdocs-card-preview-line" style="width:100%"></div><div class="gdocs-card-preview-line" style="width:65%"></div></div></div><div class="gdocs-card-info"><div class="gdocs-card-info-row"><div class="gdocs-card-dot" style="background:var(--review-accent)"></div><div class="gdocs-card-title">GLP-1 Agonists in Obesity</div></div><div class="gdocs-card-meta">Completed · 62 papers · 3w ago</div></div></div>
@@ -1185,6 +1339,12 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
           <div class="editor-tb-btn" id="citeBtn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 3h4v5H3zM9 3h4v5H9zM3 10h4v3M9 10h4v3"/></svg> Cite <span class="editor-tb-badge">12</span></div>
           <div class="editor-tb-btn audit-btn" id="shieldBtn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M8 1.5L2 4v4.5c0 3.5 2.5 5.5 6 7 3.5-1.5 6-3.5 6-7V4L8 1.5z"/></svg> Audit</div>
           <div class="editor-tb-sep"></div>
+          <div class="mark-btn" id="editorMarkBtn" style="position:relative"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M1 2h11l3 4-3 4H1z" stroke-linejoin="round"/></svg> Mark <div class="mark-btn-indicators"><img class="mark-btn-indicator important" id="markIndImportant" src="icons/tag.png" alt=""><img class="mark-btn-indicator notes" id="markIndNotes" src="icons/tag.png" alt=""></div>
+            <div class="mark-dropdown" id="editorMarkDropdown">
+              <div class="mark-option" data-mark="important"><img class="mark-tag important" src="icons/tag.png" alt=""> Important <span class="mark-check">✓</span></div>
+              <div class="mark-option" data-mark="notes"><img class="mark-tag notes" src="icons/tag.png" alt=""> Notes <span class="mark-check">✓</span></div>
+            </div>
+          </div>
           <div class="editor-tb-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M4 12l8-8M4 4h8v8"/></svg> Export</div>
         </div>
       </div>
@@ -1225,6 +1385,8 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
               <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M2 2h4.5l1.5 2H14v10H2z"/></svg> Files <span class="ltx-dd-shortcut">⌘B</span></div>
               <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M3 3h4v5H3zM9 3h4v5H9zM3 10h4v3M9 10h4v3"/></svg> Cite <span class="ltx-dd-shortcut">⌘⇧C</span></div>
               <div class="ltx-dd-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1"/><circle cx="6" cy="7" r="1.5"/><path d="M2 11l3-2.5 3 2 4-3.5"/></svg> Figures</div>
+              <div class="ltx-dd-item" id="ltxMarkImportant"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M1 3h11l3 3.5-3 3.5H1z" stroke-linejoin="round"/></svg> Mark Important</div>
+              <div class="ltx-dd-item" id="ltxMarkNotes"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><path d="M1 3h11l3 3.5-3 3.5H1z" stroke-linejoin="round"/></svg> Mark as Notes</div>
               <div class="ltx-dd-sep"></div>
               <div class="ltx-dd-section">Layout</div>
               <div class="ltx-dd-item" data-ltxlayout="source"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><rect x="1.5" y="2" width="13" height="12" rx="1.5"/><path d="M5 6l-2 2.5L5 11" opacity="0.5"/><path d="M11 6l2 2.5L11 11" opacity="0.5"/></svg> Source only</div>
@@ -1519,6 +1681,94 @@ body { font-family: "DM Sans", sans-serif; color: #1C1917; background: #FFFFFF; 
 <!-- BUDDY FAB -->
 <div class="buddy-fab" id="buddyFab"><img src="buddy-icon.png" alt="Buddy"></div>
 
+<!-- SHORTCUTS PANEL (floating, draggable, resizable) -->
+<div class="shortcuts-panel" id="shortcutsPanel">
+  <div class="shortcuts-titlebar" id="shortcutsTitlebar">
+    <div class="shortcuts-titlebar-left">
+      <span class="shortcuts-titlebar-label">Keyboard Shortcuts</span>
+      <span class="shortcuts-titlebar-module" id="shortcutsModuleTag">Draft</span>
+    </div>
+    <div class="shortcuts-close" id="shortcutsClose"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+  </div>
+  <input class="shortcuts-search" id="shortcutsSearch" placeholder="Search shortcuts..." type="text">
+  <div class="shortcuts-body" id="shortcutsBody">
+    <!-- Draft shortcuts -->
+    <div class="shortcuts-content" data-module="draft">
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Formatting</div>
+        <div class="shortcut-row"><span class="shortcut-action">Bold</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">B</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Italic</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">I</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Underline</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">U</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Strikethrough</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">X</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Highlight</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">H</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Superscript</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">.</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Subscript</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">,</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Inline Code</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">E</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Clear Formatting</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">\</span></div></div>
+      </div>
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Structure</div>
+        <div class="shortcut-row"><span class="shortcut-action">Heading 1</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">1</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Heading 2</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">2</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Heading 3</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">3</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Heading 4</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">4</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Bullet List</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">8</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Ordered List</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">7</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Blockquote</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">B</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Checklist</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">9</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Horizontal Rule</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">⏎</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Code Block</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⌥</span><span class="shortcut-key">C</span></div></div>
+      </div>
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Academic</div>
+        <div class="shortcut-row"><span class="shortcut-action">Insert Citation</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">C</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Insert Footnote</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">F</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Insert Link</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">K</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Slash Commands</span><div class="shortcut-keys"><span class="shortcut-key">/</span></div></div>
+      </div>
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Navigation</div>
+        <div class="shortcut-row"><span class="shortcut-action">Save</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">S</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Undo</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">Z</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Redo</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">Z</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Toggle Comments</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">/</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Toggle References</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">R</span></div></div>
+      </div>
+    </div>
+    <!-- LaTeX shortcuts -->
+    <div class="shortcuts-content" data-module="latex" style="display:none">
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Editor</div>
+        <div class="shortcut-row"><span class="shortcut-action">Save</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">S</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Preview PDF</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⏎</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Inline AI Edit</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">K</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Toggle Files</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">B</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Toggle Buddy</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">J</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Slash Commands</span><div class="shortcut-keys"><span class="shortcut-key">/</span></div></div>
+      </div>
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Slash Commands</div>
+        <div class="shortcut-row"><span class="shortcut-action">Generate Table</span><div class="shortcut-keys"><span class="shortcut-key">/table</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Insert Figure</span><div class="shortcut-keys"><span class="shortcut-key">/figure</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Generate Equation</span><div class="shortcut-keys"><span class="shortcut-key">/equation</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Generate TikZ</span><div class="shortcut-keys"><span class="shortcut-key">/tikz</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Insert Citation</span><div class="shortcut-keys"><span class="shortcut-key">/cite</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Generate BibTeX</span><div class="shortcut-keys"><span class="shortcut-key">/bib</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Fix Error</span><div class="shortcut-keys"><span class="shortcut-key">/fix</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Section Template</span><div class="shortcut-keys"><span class="shortcut-key">/template</span></div></div>
+      </div>
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Standard</div>
+        <div class="shortcut-row"><span class="shortcut-action">Undo</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">Z</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Redo</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">⇧</span><span class="shortcut-key">Z</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Find</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">F</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Find Next</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">G</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Accept Autocomplete</span><div class="shortcut-keys"><span class="shortcut-key">Tab</span></div></div>
+        <div class="shortcut-row"><span class="shortcut-action">Dismiss</span><div class="shortcut-keys"><span class="shortcut-key">Esc</span></div></div>
+      </div>
+    </div>
+    <!-- Global shortcuts -->
+    <div class="shortcuts-content" data-module="global">
+      <div class="shortcuts-group"><div class="shortcuts-group-label">Global</div>
+        <div class="shortcut-row"><span class="shortcut-action">Command Palette</span><div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">K</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- CMD PALETTE -->
 <div class="cmd-overlay" id="cmdOverlay"><div class="cmd-palette">
   <div class="cmd-input-wrap"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg><input type="text" placeholder="Search or jump to..." id="cmdInput"></div>
@@ -1548,6 +1798,8 @@ function switchView(id) {
   breadcrumb.innerHTML = `<strong>${viewNames[id]||id}</strong>`;
   if (id === 'editor' || id === 'latex') { sidebar.classList.add('hidden'); document.getElementById('sidebarResizeHandle').style.display='none'; }
   // Buddy FAB is available everywhere — same Buddy, same universe
+  // Update shortcuts context
+  if (window.updateShortcutsContext) window.updateShortcutsContext(id);
 }
 navItems.forEach(i => i.addEventListener('click', () => switchView(i.dataset.view)));
 document.querySelectorAll('[data-nav]').forEach(el => el.addEventListener('click', () => { switchView(el.dataset.nav); document.getElementById('cmdOverlay').classList.remove('open'); document.getElementById('newDropdown')?.classList.remove('open'); }));
@@ -1752,6 +2004,37 @@ document.getElementById('ltxCompile')?.addEventListener('click', function() {
   setTimeout(() => { this.innerHTML = orig; this.style.opacity = ''; this.style.pointerEvents = ''; ltxToast('PDF preview ready'); }, 2000);
 });
 
+// Mark system — toggle dropdown, toggle marks, filter
+document.getElementById('editorMarkBtn')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('editorMarkDropdown').classList.toggle('open');
+});
+document.addEventListener('click', () => document.getElementById('editorMarkDropdown')?.classList.remove('open'));
+document.querySelectorAll('.mark-option').forEach(opt => opt.addEventListener('click', (e) => {
+  e.stopPropagation();
+  opt.classList.toggle('active');
+  // Update toolbar indicators
+  const mark = opt.dataset.mark;
+  const ind = document.getElementById(mark === 'important' ? 'markIndImportant' : 'markIndNotes');
+  if (ind) ind.classList.toggle('visible', opt.classList.contains('active'));
+}));
+// LaTeX mark items
+document.getElementById('ltxMarkImportant')?.addEventListener('click', (e) => { e.stopPropagation(); ltxToast('Marked as Important'); document.getElementById('ltxDropdown')?.classList.remove('open'); });
+document.getElementById('ltxMarkNotes')?.addEventListener('click', (e) => { e.stopPropagation(); ltxToast('Marked as Notes'); document.getElementById('ltxDropdown')?.classList.remove('open'); });
+// Mark filters on dashboard
+let activeMark = null;
+document.querySelectorAll('.mark-filter').forEach(f => f.addEventListener('click', () => {
+  const mark = f.dataset.markFilter;
+  if (f.classList.contains('active')) { f.classList.remove('active'); activeMark = null; }
+  else { document.querySelectorAll('.mark-filter').forEach(x => x.classList.remove('active')); f.classList.add('active'); activeMark = mark; }
+  // Filter both list items and grid cards
+  document.querySelectorAll('.gdocs-item, .gdocs-card').forEach(item => {
+    const marks = (item.dataset.marks || '').split(' ');
+    if (!activeMark) { item.classList.remove('filtered'); return; }
+    item.classList.toggle('filtered', !marks.includes(activeMark));
+  });
+}));
+
 // Remove tool — click × to animate out, update add panel
 document.querySelectorAll('.nav-item-remove').forEach(btn => btn.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -1884,6 +2167,77 @@ document.querySelectorAll('.add-tool-item[data-addtool]').forEach(item => item.a
   setTimeout(() => { document.getElementById('addToolPanel').classList.remove('open'); }, 300);
 }));
 
+// Shortcuts panel — floating, draggable, context-aware
+(function() {
+  const panel = document.getElementById('shortcutsPanel');
+  const titlebar = document.getElementById('shortcutsTitlebar');
+  const closeBtn = document.getElementById('shortcutsClose');
+  const searchInput = document.getElementById('shortcutsSearch');
+  const moduleTag = document.getElementById('shortcutsModuleTag');
+  if (!panel || !titlebar) return;
+
+  // Dragging
+  let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
+  titlebar.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.shortcuts-close')) return;
+    isDragging = true;
+    dragOffsetX = e.clientX - panel.offsetLeft;
+    dragOffsetY = e.clientY - panel.offsetTop;
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    panel.style.left = (e.clientX - dragOffsetX) + 'px';
+    panel.style.top = (e.clientY - dragOffsetY) + 'px';
+    panel.style.right = 'auto';
+  });
+  document.addEventListener('mouseup', () => { isDragging = false; document.body.style.userSelect = ''; });
+
+  // Close
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  // Search/filter
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase();
+    panel.querySelectorAll('.shortcut-row').forEach(row => {
+      const action = row.querySelector('.shortcut-action').textContent.toLowerCase();
+      row.style.display = (!q || action.includes(q)) ? '' : 'none';
+    });
+    // Hide empty groups
+    panel.querySelectorAll('.shortcuts-group').forEach(group => {
+      const visible = group.querySelectorAll('.shortcut-row[style=""], .shortcut-row:not([style])').length;
+      group.style.display = visible > 0 ? '' : 'none';
+    });
+  });
+
+  // Context switching — show shortcuts for current module
+  window.updateShortcutsContext = function(module) {
+    const modules = { 'editor': 'draft', 'latex': 'latex' };
+    const mod = modules[module] || 'draft';
+    panel.querySelectorAll('.shortcuts-content').forEach(c => {
+      c.style.display = (c.dataset.module === mod || c.dataset.module === 'global') ? '' : 'none';
+    });
+    const labels = { 'draft': 'Draft', 'latex': 'LaTeX' };
+    moduleTag.textContent = labels[mod] || 'Draft';
+  };
+})();
+
+// Wire keyboard shortcuts button in user panel to open shortcuts panel
+document.querySelectorAll('.sidebar-user-panel-item').forEach(item => {
+  if (item.textContent.includes('Keyboard shortcuts')) {
+    item.addEventListener('click', () => {
+      const panel = document.getElementById('shortcutsPanel');
+      panel.classList.toggle('open');
+      // Set context based on current view
+      const activeView = document.querySelector('.view.active');
+      if (activeView) {
+        const viewId = activeView.id.replace('view-','');
+        if (window.updateShortcutsContext) window.updateShortcutsContext(viewId);
+      }
+    });
+  }
+});
+
 // Sidebar bottom — user panel toggle
 document.getElementById('sidebarUserBtn')?.addEventListener('click', () => {
   const panel = document.getElementById('sidebarUserPanel');
@@ -1892,6 +2246,16 @@ document.getElementById('sidebarUserBtn')?.addEventListener('click', () => {
   if (panel.classList.contains('open')) { chevron.style.transform = 'rotate(180deg)'; }
   else { chevron.style.transform = ''; }
 });
+// Text size toggle
+document.querySelectorAll('.text-size-opt').forEach(opt => opt.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.querySelectorAll('.text-size-opt').forEach(o => o.classList.remove('active'));
+  opt.classList.add('active');
+  const sidebar = document.querySelector('.sidebar');
+  if (opt.dataset.size === 'large') { sidebar.classList.add('text-large'); }
+  else { sidebar.classList.remove('text-large'); }
+}));
+
 // Theme switch toggle
 document.getElementById('themeSwitch')?.addEventListener('click', function(e) {
   e.stopPropagation();

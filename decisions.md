@@ -349,6 +349,44 @@ All icons are white monochrome on the deep purple sidebar. The approach evolved 
 
 ---
 
+## Mark System — Cross-Module Tagging
+
+- Two opinionated tags called "Marks": **Important** (amber tag) and **Notes** (blue tag).
+- Same tag icon shape for both, differentiated by color — recognizable from distance.
+- **Important** can be applied to any project/document across all modules. It signals "this matters, come back to it."
+- **Notes** can be applied to drafts. It signals "this is for review/reference, not a primary deliverable."
+- Both marks can coexist on the same item — a draft can be both Important and Notes.
+- **In the Draft editor:** A "Mark" button in the toolbar opens a dropdown with Important and Notes options. Toggle on/off. Active marks show as colored tag indicators next to the Mark button text, so the user always sees the current state while working.
+- **In the LaTeX editor:** Mark Important and Mark as Notes are available in the ⋯ more menu under Tools.
+- **On the Projects dashboard:** Two filter chips (Important, Notes) appear after the type filters, separated by a divider. Clicking a filter shows only items with that mark. Works identically in both list view and grid view.
+- **Visual indicators:** Colored tag icons appear on project list items (inline, before the timestamp) and on grid cards (top-right corner of the preview area).
+- **Rationale:** Researchers need to distinguish between "active work" and "reference material." Rather than building a complex tagging system, two opinionated marks cover 90% of organizational needs. The constraint is intentional — too many tags leads to tag management overhead. Two marks, two colors, zero friction.
+
+---
+
+## Keyboard Shortcuts Panel — Floating, Draggable, Context-Aware
+
+- A floating panel that shows all keyboard shortcuts for the current module.
+- **Context-aware:** Automatically switches content based on which module is active. Draft module shows Draft shortcuts (Formatting, Structure, Academic, Navigation). LaTeX module shows LaTeX shortcuts (Editor, Slash Commands, Standard). Global shortcuts (Cmd+K) always visible.
+- **Opened from:** User dropdown → "Keyboard shortcuts" option.
+- **Draggable:** Grab the title bar to move the panel anywhere on screen.
+- **Resizable:** Browser-native resize handle (bottom-right corner).
+- **Searchable:** Filter shortcuts by typing in the search box. Empty groups auto-hide.
+- **Floats above everything:** z-index 500, stays on top of editor, preview, sidebar.
+- **Module badge:** A small colored tag in the title bar shows which module's shortcuts are displayed ("Draft" or "LaTeX").
+- **Design:** Clean white background, grouped by category with subtle section headers, key combinations shown as bordered monospace pills (same visual language as the rest of the app).
+- **Rationale:** Power users need shortcut references while learning the app. A floating panel they can position anywhere and keep open while working is better than a modal that blocks the editor. Context-switching per module means you only see relevant shortcuts, not a giant list of everything.
+
+---
+
+## Sidebar Accessibility
+
+- **Scrollable navigation area:** The sidebar nav sections and add-tool panel are wrapped in a scrollable container. Logo stays pinned at top, user area stays pinned at bottom. The middle scrolls with a subtle 3px scrollbar (transparent track, faint thumb, darkens on hover). On tall screens where everything fits, no scrollbar appears.
+- **Text size toggle:** Available in the user dropdown as "Text size" with two options: A− (normal, default) and A+ (large). Clicking A+ increases sidebar nav labels from 13px to 15px, section headers proportionally, add-tool items to 15px. Helps users with presbyopia or those who prefer larger text. The toggle is a minimal segmented control — two letters, no slider, no settings page.
+- **Rationale:** Accessibility shouldn't require a trip to settings. The most common accessibility need (text size) lives one click away in the user dropdown, next to dark mode. Both are set-once preferences that don't need prime real estate.
+
+---
+
 ## Open Decisions
 
 - [x] Sidebar color palette — deep purple Superhuman hero palette with animated gradient orbs (decided)
